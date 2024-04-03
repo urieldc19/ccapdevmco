@@ -1,0 +1,80 @@
+<html>
+
+    <head>
+        <title>Edit Profile</title>
+        <link rel="stylesheet" type="text/css" href="./css/forum-editprofile.css"/>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script>
+          function login() {
+              window.location.href = "/login";
+          }
+        </script>
+
+        <script>
+          function view() {
+              window.location.href = "/profile";
+          }
+        </script>
+    </head>
+
+     <header id="mainheader">
+        <a href="/" class="logo"></a>
+        <form id="searcharea" action="/search" method="get">
+            <input type="text" name="search" id="search" placeholder="Search HotOrCold">
+            <button type="submit" class='btn' id="searchbtn"></button>  
+        </form>
+        {{#each currUser}}
+            {{#if this.username}}
+                <style>
+                    #viewbtn {
+                    background-image: url({{this.profilepic}});
+                    }
+                </style>
+
+                <script>
+                    window.onload = () => {
+                        isLoggedIn("{{this.username}}");
+                    }
+                </script>
+            {{/if}}
+        {{/each}}
+      </header>
+
+    <body>
+        <div class="container">
+            <h1><span style="color: #ec3232">Edit</span><span style="color: #2992cf"> Profile</span></h1>
+            <form id="profileForm" action="/submiteditprofile" method="post" enctype="multipart/form-data">
+              <div class="profPic"> 
+                <label for="profilePicture">Profile Picture:</label><br>
+                <input type="file" accept="image/*" id="profilePicture" name="profilepic"><br>
+                <!-- **optional for preview purposes** <img id="profileImage" src="placeholder.jpg" alt="Profile Picture"><br><br> --> 
+
+              </div>
+              
+              <div class="coverPic"> 
+                  <label for="coverPhoto">Cover Photo:</label><br>
+                  <input type="file" accept="image/*" id="coverPhoto" name="headerpic"><br>
+                <!-- **optional for preview purposes** <img id="coverImage" src="placeholder.jpg" alt="Cover Photo"><br><br> -->  
+            
+              </div>
+
+          
+                <label for="email">Email:</label><br>
+                <input type="email" id="email" name="email"><br>
+          
+                <label for="bio">Bio:</label><br>
+                <textarea id="bio" name="bio" rows="4"></textarea><br>
+          
+                
+                <input type="submit" id="btn" >
+            </form>
+        </div>
+
+        <script src="./scripts/forum-editprofile.js" defer></script>
+        <script src="./scripts/forum.js" defer></script>
+    </body>
+
+</html>

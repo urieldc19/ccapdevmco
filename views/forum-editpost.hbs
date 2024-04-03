@@ -1,0 +1,94 @@
+<html>
+    <head>
+        <title>HotOrCold Edit Post</title>
+        <link rel="stylesheet" type="text/css" href="/css/forum-post.css"/>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script>
+            function login() {
+                window.location.href = "/login";
+            }
+        </script>
+
+        <script>
+            function view() {
+                window.location.href = "/profile";
+            }
+        </script>    
+    
+    </head>
+         <header id="mainheader">
+        <a href="/" class="logo"></a>
+        <form id="searcharea" action="/search" method="get">
+            <input type="text" name="search" id="search" placeholder="Search HotOrCold">
+            <button type="submit" class='btn' id="searchbtn"></button>  
+        </form>
+        {{#each currUser}}
+            {{#if this.username}}
+                <style>
+                    #viewbtn {
+                    background-image: url({{this.profilepic}});
+                    }
+                </style>
+
+                <script>
+                    window.onload = () => {
+                        isLoggedIn("{{this.username}}");
+                    }
+                </script>
+            {{/if}}
+        {{/each}}
+    </header>
+
+        <body>
+            <div class="container">
+                <div class="mainpanel">
+                    <form id="createpost" action="/post/submitedit/{{posts._id}}" method="post" enctype="multipart/form-data">
+                        <div class="top">
+                            <label id="mainlabel" for="createpost">Edit Post</label>
+                        </div>
+
+                        <div class="post-title">
+                            <label class="post-info" for="post-title">Post Title:</label><br>
+                            <input type="text" id="post-title" name="title" placeholder="Enter Post Title...">
+                        </div>
+
+                        <div class="post-description">
+                            <label class="post-info" for="post-description">Post Description:</label><br>
+                            <textarea id="post-description" name="description" placeholder="Enter Post Description..."></textarea>
+                        </div>
+
+                        <div class="post-tag">
+                            <label class="post-info" for="post-tag">Tag:</label><br>
+                            <select id="tags" name="tag">
+                                <option class="opt" value="" disabled selected>Choose a Tag</option>
+                                <option class="opt" value="Technology">Technology</option>
+                                <option class="opt" value="Fashion">Fashion</option>
+                                <option class="opt" value="Gaming">Gaming</option>
+                                <option class="opt" value="News">News</option>
+                                <option class="opt" value="Television">Television</option>
+                                <option class="opt" value="Music">Music</option>
+                                <option class="opt" value="Animals">Animals</option>
+                                <option class="opt" value="Art">Art</option>
+                            </select>
+                        </div>
+
+                        <div class="post-content">
+                            <label class="post-info" for="post-content">Upload a Photo:</label><br>
+                            <input type="file" accept="image/*" id="postcontent" name="postcontent"><br>
+                        </div>
+
+                        <div class="submitclass">
+                            <!-- <a class="back" href="/">Back</a> **if want na bumalik sa home-->
+                            <button class="back" onclick="history.back()">Back</button> <!-- goes back to previous page -->
+                            <input type="submit" id="submitid">
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        <script src="/scripts/forum.js" defer></script>
+    </head>
+</html>

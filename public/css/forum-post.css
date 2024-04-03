@@ -1,0 +1,319 @@
+/* HEADER */
+
+:root {
+    font-family: 'Poppins', sans-serif;
+    font-size: 25px;
+}
+
+.btn {
+    cursor: pointer;
+}
+
+a {
+    text-decoration: none;
+}
+
+.tagbtn a, .posttag a {
+    color: white;
+}
+
+body {
+    background-color: #001025;
+    margin-right: 55px;
+    margin-left: 55px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 25px;
+}
+
+header {
+    z-index: 3;
+    background-color: #001025;
+    position: sticky;
+    top: 0;
+    height: 40px;
+    display: flex;
+	flex-direction: row;
+    padding: 15px 0px;
+    align-content: space-between;
+    border-bottom: #062753 solid 0.2px;
+}
+
+.logo {
+    background-image: url('../images/textlogo.png');
+    background-size: 160px 40px;
+    width: 160px;
+    height: 40px;
+    margin: 0;
+    padding: 0;
+}
+
+#searcharea {
+    display: flex;
+    flex-direction: row;
+    align-self: center;
+    justify-content: center;
+    margin: auto;
+}
+
+#search {
+    font-family: 'Poppins', sans-serif;
+    background-color: #062753;
+    color: white;
+    font-size: 20px;
+    align-self: center;
+    border-radius: 50px;
+    margin-left: auto;
+    margin-right: 10px;
+    padding-left: 20px;
+    width: 350px;
+    height: 100%;
+    border: none;
+    cursor: text;
+}
+
+::placeholder {
+    color:rgb(55, 94, 145);
+}
+
+#loginbtn {
+    font-family: 'Poppins';
+    font-size: 18px;
+    background-color: #E81E1E;
+    color: white;
+    align-self: center;
+    border-radius: 50px;
+    margin-left: auto;
+    margin-right: 0;
+    width: 100px;
+    height: 100%;
+    border: none;
+}
+
+#loginbtn:hover {
+    font-family: 'Poppins';
+    font-size: 18px;
+    background-color: #ec3232;
+    color: white;
+}
+
+#searchbtn {
+    background-image: url(../images/searchbtn.png);
+    background-size: 45px 45px;
+    width: 45px;
+    height: 45px;
+    border-radius: 100px;
+    border: none;
+}
+
+#searchbtn:hover {
+    background-image: url(../images/searchbtnhover.png);
+    background-size: 45px 45px;
+}
+
+
+#menubtn {
+    font-family: 'Poppins';
+    font-size: 18px;
+    background-color: #001025;
+    color: white;
+    align-self: center;
+    border-radius: 50px;
+    margin-left: 10px;
+    margin-right: 5px;
+    width: 50px;
+    height: 100%;
+    border: none;
+}
+
+#menubtn:hover {
+    font-family: 'Poppins';
+    background-color: #001025;
+    color: white;
+}
+
+.menucontent {
+    display: none;
+    position: absolute;
+    background-color: #001025;
+    width: 100px;
+    min-width: auto;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    margin-right: 200px;
+  }
+
+  .menucontent a {
+    color:  white;
+    text-align: center;
+    font-size: 15px;
+    padding: 5px 5px;
+    text-decoration: none;
+    display: block;
+  }
+
+.menucontent a:hover {background-color: #062753;}
+
+.settings:hover .menucontent {display: block;}
+
+.settings:hover .menubtn {background-color: #062753;}
+
+#viewbtn {
+    background-image: url(../images/user-prof-pic.png);
+    align-self: center;
+    background-size: cover;
+    border-radius: 50px;
+    margin-left: auto;
+    margin-right: -2px;
+    width: 40px;
+    height: 40px;
+    border: none;
+}
+
+#viewbtn:hover {
+    font-family: 'Poppins';
+    font-size: 18px;
+    background-color: white;
+    color: white;
+}
+
+#headerusername {
+    color: white;
+    margin-left: 7px;
+}
+
+/* BODY */
+.container {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: row;
+}
+
+.mainpanel {
+    background-color: #062753;
+    width: 1000px;
+    height: 875px;
+    position: sticky;
+    align-self: center;
+    padding: 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    border-style: solid;
+    border-color: #062753;
+    border-radius: 15px;
+}
+
+.top {
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+#mainlabel {
+    color: white;
+    margin-left: 15px;
+}
+
+.post-info {
+    color: white;
+    font-size: 20px;
+    margin-left: 15px;
+}
+
+#post-title {
+    background-color: #001025;
+    margin-left: 15px;
+    padding: 5px;
+    width: 971px;
+    font-size: 18px;
+    font-family: 'Poppins', sans-serif;
+    color: white;
+    border: 0px;
+    border-radius: 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#post-description {
+    background-color: #001025;
+    margin-left: 15px;
+    padding: 5px;
+    width: 971px;
+    height: 450px;
+    font-size: 18px;
+    font-family: 'Poppins', sans-serif;
+    color: white;
+    border-color: #062753;
+    border-radius: 5px;
+    resize: none;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#tags {
+    background-color: #001025;
+    margin-left: 15px;
+    padding: 5px;
+    width: 200px;
+    height: 50px;
+    font-size: 18px;
+    font-family: 'Poppins', sans-serif;
+    color: white;
+    border-color: #062753;
+    border-radius: 5px;
+    resize: none;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#postcontent {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 15px;
+    color: white;
+    font-family: 'Poppins', sans-serif;
+}
+
+.submitclass {
+    text-align: right;
+}
+
+#submitid {
+    align-self: center;
+    background-color: #001025;
+    color: #fff;
+    cursor: pointer;
+    border-color: #062753;
+    border-style: solid;
+    border-radius: 30px;
+    margin-top: 7px;
+    margin-right: 13px;
+    font-size: 18px;
+    font-family: 'Poppins', sans-serif;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+#submit:hover {
+    background-color: #ec3232;
+}
+
+.back {
+    background-color: #001025;
+    color: white;
+    font-size: 18px;
+    height: auto;
+    width: auto;
+    border-color: #062753;
+    border-radius: 30px;
+    border-style: solid;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 15px;
+    padding-right: 15px;
+    text-decoration: none;
+}
+
+.back:hover {
+    background-color: #ec3232;
+}

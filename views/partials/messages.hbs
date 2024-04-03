@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="/css/messages.css">
+</head>
+<body>
+    
+    {{#if error_msg}}
+    <div class="error-message">
+        <p class="message-text">{{error_msg}}</p>
+    </div>
+    {{/if}}
+
+    {{#if success_msg}}
+    <div class="success-message">
+        <p class="message-text">{{success_msg}}</p>
+    </div>
+    {{/if}}
+</body>
+</html>

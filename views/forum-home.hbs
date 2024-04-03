@@ -1,0 +1,218 @@
+<html>
+    <head>
+        <title>HotOrCold</title>
+        <link rel="stylesheet" type="text/css" href="/css/forum.css"/>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script>
+            function login() {
+                window.location.href = "/login";
+            }
+        </script>
+
+        <script>
+            function view() {
+                window.location.href = "/profile";
+            }
+
+            function getCurrUsername() {
+                return "{{currUser.username}}";
+            }
+
+        </script>
+    </head>
+
+    <header id="mainheader">
+        <a href="/" class="logo"></a>
+        <form id="searcharea" action="/search" method="get">
+            <input type="text" name="search" id="search" placeholder="Search HotOrCold">
+            <button type="submit" class='btn' id="searchbtn"></button>  
+        </form>
+
+                <style>
+                    #viewbtn {
+                    background-image: url({{currUser.profilepic}});
+                    }
+                </style>
+
+                <script>
+                    window.onload = () => {
+                        isLoggedIn("{{currUser.username}}");
+                    }
+                </script>
+            
+    </header>
+    
+    <body>
+        <div class="mainpanel">
+            <div class="leftpanel">
+                <div class="btn" id="homeoption">
+                    <a href="/">Home</a>
+                </div>
+
+                <div id="createpostbtn">
+                </div>
+
+                <div id="tagspanel">
+                    <div id="tagsheader">
+                        Popular Tags
+                    </div>
+                    <div id="tagsarea">
+                        <div class="tagbtn" id="technologytag" name="technologytag"><a href="/tag/technology">Technology</a></div>
+                        <div class="tagbtn" id="fashiontag" name="fashiontag"><a href="/tag/fashion">Fashion</a></div>
+                        <div class="tagbtn" id="gamingtag" name="gamingtag"><a href="/tag/gaming">Gaming</a></div>
+                        <div class="tagbtn" id="newstag" name="newstag"><a href="/tag/news">News</a></div>
+                        <div class="tagbtn" id="tvtag" name="tvtag"><a href="/tag/television">Television</a></div>
+                        <div class="tagbtn" id="musictag" name="musictag"><a href="/tag/music">Music</a></div>
+                        <div class="tagbtn" id="animaltag" name="animaltag"><a href="/tag/animals">Animals</a></div>
+                        <div class="tagbtn" id="arttag" name="arttag"><a href="/tag/art">Art</a></div>
+                    </div>
+                </div>
+            </div>
+
+        
+            <div class="middlepanel">
+                {{#if posts}}
+                    {{#each posts}}
+
+                    <script>
+                        function viewPost(postId) {
+                            window.location.href = '/post/view/' + encodeURIComponent(postId)
+                        }
+
+                        function upvotePost(postId) {
+                            window.location.href = '/post/upvote/' + encodeURIComponent(postId)
+                        }
+
+                        function downvotePost(postId) {
+                            window.location.href = '/post/downvote/' + encodeURIComponent(postId)
+                        }
+
+                        function editPost(postId) {
+                            window.location.href = '/post/edit/' + encodeURIComponent(postId)
+                        }
+
+                        function deletePost(postId) {
+                            window.location.href = '/post/delete/' + encodeURIComponent(postId)
+                        }
+
+                        function isPostedbyCurrUser(postusername) {
+                            if (postusername === getCurrUsername()) {
+                                document.getElementById('options-btn').innerHTML = 
+                                `
+                                <button class="options-btn-trigger">ooo</button>
+                                    <div class="options-menu">
+                                        <button id="edit-btn" onclick="editPost('{{this._id}}')">Edit</button>
+                                        <button class="delete-btn" onclick="deletePost('{{this._id}}')">Delete</button>
+                                    </div>
+                                `;
+                            }
+                        }
+                    </script>
+                    
+                    <div class="postarea" name="{{this.url}}">
+                            <div class="post" onclick="viewPost('{{this._id}}')">
+                                <div class="postheader">
+                                    <img class="postinfoicon" src="{{this.userprofilepic}}"/>
+                                    <div class="postinfo">
+                                        <div class="postinforow1">
+                                            <span class="title">{{this.title}}</span>
+                                            <span class="posttag"><a href="/tag/{{this.tag}}">{{this.tag}}</a></span>
+                                        </div>
+
+                                        <div class="postinforow2">
+                                            <span id="username"><a class="username-link" href="/user/{{this.username}}">{{this.username}}</a></span> •
+                                            <span id="date">{{this.postdate}}</span>
+                                            {{#if this.edited}}
+                                                    <span> • Edited</span>
+                                            {{/if}}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div id="postcont{{@index}}" class="postcontent">
+                                    <div class="postdesc">
+                                        {{this.description}}
+                                    </div>
+                                    
+                                    {{#if this.image}}
+                                        <script>
+                                        document.getElementById("postcont{{@index}}").innerHTML +=
+                                            `<img class="postimage" src="{{this.image}}">`
+                                        </script>
+                                    {{/if}}
+                                </div>
+                            </div>
+                        
+                        <div class="postactions">
+                            <input type="button" class="hot" onclick="upvotePost('{{this._id}}')">
+                            <div class="votes">
+                                {{this.upvote}}
+                            </div>
+                            <input type="button" class="cold" onclick="downvotePost('{{this._id}}')">
+                            <div class="votes">
+                                {{this.downvote}}
+                            </div>
+                            <input type="button" class="commentbtn" onclick="viewPost('{{this._id}}')">
+                            <div class="comments">
+                                {{this.comments.length}}
+                            </div>
+
+                            <div id="options-btn">
+                            </div>
+
+                            <script>
+                                isPostedbyCurrUser('{{this.username}}');
+                            </script>
+                        </div>
+                    </div>
+                    {{/each}}
+
+                    {{else}}
+                        <div class="postarea" id="emptypost" name="{{this.url}}">
+                                Posts are empty...
+                        </div>
+                    {{/if}}
+            </div>
+
+
+            <div class="rightpanel">
+                <div id="popularpostsheader">
+                    Popular Posts
+                </div>
+                <div id="popularpostspanel">
+                    {{#each popularPosts}}
+                        <a href="/post/view/{{this._id}}">
+                            <div class="popularpostentry">
+                            {{#if this.image}}
+                                <img src="{{this.image}}" class="thumbnail">
+                                <div class="thumbnailinfo">
+                                    <div class="thumbnailuser">
+                                        {{this.username}}
+                                    </div>
+                                    <div class="thumbnaildesc">
+                                        {{this.title}}
+                                    </div>                                
+                                </div>
+                                {{else}}
+                                    <div class="thumbnailinfo2">
+                                        <div class="thumbnailuser2">
+                                        {{this.username}}
+                                        </div>
+                                        <div class="thumbnaildesc2">
+                                        {{this.title}}
+                                    </div>                                
+                                </div>
+                            {{/if}}                    
+                            </div>
+                        </a>
+                    {{/each}}
+                </div>
+            </div>
+        </div>
+
+        <script src="/scripts/forum.js" defer></script>
+    </body>
+</html>

@@ -1,0 +1,294 @@
+/* HEADER */
+
+:root {
+  font-family: 'Poppins', sans-serif;
+  font-size: 25px;
+}
+
+.btn {
+  cursor: pointer;
+}
+
+a {
+  text-decoration: none;
+}
+
+.tagbtn a, .posttag a {
+  color: white;
+}
+
+body {
+  background-color: #001025;
+  margin-right: 55px;
+  margin-left: 55px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 25px;
+}
+
+header {
+  z-index: 3;
+  background-color: #001025;
+  position: sticky;
+  top: 0;
+  height: 40px;
+  display: flex;
+flex-direction: row;
+  padding: 15px 0px;
+  align-content: space-between;
+  border-bottom: #062753 solid 0.2px;
+}
+
+.logo {
+  background-image: url('../images/textlogo.png');
+  background-size: 160px 40px;
+  width: 160px;
+  height: 40px;
+  margin: 0;
+  padding: 0;
+}
+
+#searcharea {
+  display: flex;
+  flex-direction: row;
+  align-self: center;
+  justify-content: center;
+  margin: auto;
+}
+
+#search {
+  font-family: 'Poppins', sans-serif;
+  background-color: #062753;
+  color: white;
+  font-size: 20px;
+  align-self: center;
+  border-radius: 50px;
+  margin-left: auto;
+  margin-right: 10px;
+  padding-left: 20px;
+  width: 350px;
+  height: 100%;
+  border: none;
+  cursor: text;
+}
+
+::placeholder {
+  color:rgb(55, 94, 145);
+}
+
+#loginbtn {
+  font-family: 'Poppins';
+  font-size: 18px;
+  background-color: #E81E1E;
+  color: white;
+  align-self: center;
+  border-radius: 50px;
+  margin-left: auto;
+  margin-right: 0;
+  width: 100px;
+  height: 100%;
+  border: none;
+}
+
+#loginbtn:hover {
+  font-family: 'Poppins';
+  font-size: 18px;
+  background-color: #ec3232;
+  color: white;
+}
+
+#searchbtn {
+  background-image: url(../images/searchbtn.png);
+  background-size: 45px 45px;
+  width: 45px;
+  height: 45px;
+  border-radius: 100px;
+  border: none;
+}
+
+#searchbtn:hover {
+  background-image: url(../images/searchbtnhover.png);
+  background-size: 45px 45px;
+}
+
+
+#menubtn {
+  font-family: 'Poppins';
+  font-size: 18px;
+  background-color: #001025;
+  color: white;
+  align-self: center;
+  border-radius: 50px;
+  margin-left: 10px;
+  margin-right: 5px;
+  width: 50px;
+  height: 100%;
+  border: none;
+}
+
+#menubtn:hover {
+  font-family: 'Poppins';
+  background-color: #001025;
+  color: white;
+}
+
+.menucontent {
+  display: none;
+  position: absolute;
+  background-color: #001025;
+  width: 100px;
+  min-width: auto;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  margin-right: 200px;
+}
+
+.menucontent a {
+  color:  white;
+  text-align: center;
+  font-size: 15px;
+  padding: 5px 5px;
+  text-decoration: none;
+  display: block;
+}
+
+.menucontent a:hover {background-color: #062753;}
+
+.settings:hover .menucontent {display: block;}
+
+.settings:hover .menubtn {background-color: #062753;}
+
+#viewbtn {
+  align-self: center;
+  background-size: cover;
+  border-radius: 50px;
+  margin-left: auto;
+  margin-right: -2px;
+  width: 40px;
+  height: 40px;
+  border: none;
+}
+
+#viewbtn:hover {
+  font-family: 'Poppins';
+  font-size: 18px;
+  background-color: white;
+  color: white;
+}
+
+#headerusername {
+  color: white;
+  margin-left: 7px;
+}
+
+/* BODY */
+
+.container {
+    width: 800px;
+    height: 600px;
+    margin: 0 auto;
+    padding: 0px;
+    background-color: #062753;
+    border: 1px solid #ccc;
+    border-radius: 30px;
+    margin-top: 20px;
+    align-items: center;
+    text-align: center;
+  }
+
+h1 {
+    font-size: 30px;
+    color: white;
+    position: center;
+    text-align: center;
+}
+  
+input[type="text"], input[type="email"], textarea {
+    color: white;
+    background-color: rgb(55, 94, 145);
+    width: 300px;
+    padding: 10px;
+    margin-bottom: 3px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  #btn {
+    margin-top: 25px;
+    margin-left: 0px;
+    padding: 10px 20px;
+    background-color: #001025;
+    border: 1px solid white;
+    border-radius: 5px;
+    cursor: pointer;
+    align-items: center;
+    color: white;
+    font-family: 'Poppins',sans-serif;
+  }
+  
+  #btn:hover {
+    background-color: #062753;
+  }
+  
+  #profileForm label {
+    color: white;
+    font-size: 16px;
+  }
+
+  .profPic label {
+    color: white;
+    font-size: 16px;
+  }
+
+  .profPic input {
+    color: white;
+    background-color: rgb(55, 94, 145);
+    width: 300px;
+    padding: 10px;
+    margin-bottom: 3px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+
+  .coverPic label {
+    color: white;
+    font-size: 16px;
+  }
+
+  .coverPic input {
+    color: white;
+    background-color: rgb(55, 94, 145);
+    width: 300px;
+    padding: 10px;
+    margin-bottom: 3px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+
+  .link label {
+    color: white;
+    font-size: 16px;
+  }
+
+  .link input {
+    color: white;
+    background-color: rgb(55, 94, 145);
+    width: 300px;
+    padding: 10px;
+    margin-bottom: 3px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  .bday label {
+    color: white;
+    font-size: 16px;
+  }
+
+  .bday input {
+    color: white;
+    background-color: rgb(55, 94, 145);
+    width: 300px;
+    padding: 10px;
+    margin-bottom: 3px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }

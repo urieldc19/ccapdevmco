@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>HotOrCold Log In</title>
+        <link rel="stylesheet" type="text/css" href="../css/forum-login.css"/>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script>
+            function login() {
+                window.location.href = "/login";
+            }
+        </script>
+
+        <script>
+            function view() {
+                window.location.href = "/profile";
+            }
+        </script>    
+    
+    </head>
+
+    <header id="mainheader">
+        <a href="/" class="logo"></a>
+    </header>
+
+    <body>
+        <div class="mainpanel">
+
+            <div class="leftpanel">
+                <div class="logocontainer">
+                    <img src="../images/app-logo.png">
+                </div>
+            </div>
+
+            <div class="rightpanel">
+                
+                <div class="headerslogan">
+                    <h1>The Latest <span style="color: #ec3232">Bu</span><span style="color: #2992cf">zz</span>.</h1>
+                    <h2>Be Involved.</h2>
+                </div>
+                    
+                <div class="loginpanel">
+                    <form action="/login" method="POST">
+                        <div class="form-group-header">
+                            <label>Already have an account?</label>
+                        </div>
+                        {{> messages}}
+                        <div class="form-group">
+                            <label for="username">Username:</label>
+                            <input type="text" id="username" name="username" autocomplete="username" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password:</label>
+                            <input type="password" id="password" name="password" autocomplete="newpassword" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Log In">
+                        </div>
+
+                        <div class="form-group-register">
+                            <label>Don't have an account? <a href="/register">Sign Up</a></label>
+                    </div>
+                    </form>
+                </div>                      
+            </div>
+        </div>
+    
+        <footer>
+        <p>&copy; 2024 HotOrCold. All rights reserved.</p>
+    </footer>
+    </body>
+</html>

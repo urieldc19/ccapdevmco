@@ -1,0 +1,283 @@
+<html>
+    <head>
+        <title>HotOrCold</title>
+        <link rel="stylesheet" type="text/css" href="/css/forum-viewpost.css"/>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        
+        <script>
+            function login() {
+                window.location.href = "/login";
+            }
+        </script>
+
+        <script>
+            function view() {
+                window.location.href = "/profile";
+            }
+        </script>
+
+        <script src="/scripts/forum.js" defer></script>
+    </head>
+
+    <header id="mainheader">
+        <a href="/" class="logo"></a>
+        <form id="searcharea" action="/search" method="get">
+            <input type="text" name="search" id="search" placeholder="Search HotOrCold">
+            <button type="submit" class='btn' id="searchbtn"></button>  
+        </form>
+        {{#each currUser}}
+            {{#if this.username}}
+                <style>
+                    #viewbtn {
+                    background-image: url({{this.profilepic}});
+                    }
+                </style>
+
+                <script>
+                    window.onload = () => {
+                        isLoggedIn("{{this.username}}");
+                    }
+                </script>
+            {{/if}}
+        {{/each}}
+    </header>
+
+    <body>
+        <div class="mainpanel">
+            <div class="leftpanel">
+                <div class="btn" id="homeoption">
+                    <a href="/">Home</a>
+                </div>
+
+                <div id="createpostbtn">
+                </div>
+
+                <div id="tagspanel">
+                    <div id="tagsheader">
+                        Popular Tags
+                    </div>
+                    <div id="tagsarea">
+                        <div class="tagbtn" id="technologytag" name="technologytag"><a href="/tag/technology">Technology</a></div>
+                        <div class="tagbtn" id="fashiontag" name="fashiontag"><a href="/tag/fashion">Fashion</a></div>
+                        <div class="tagbtn" id="gamingtag" name="gamingtag"><a href="/tag/gaming">Gaming</a></div>
+                        <div class="tagbtn" id="newstag" name="newstag"><a href="/tag/news">News</a></div>
+                        <div class="tagbtn" id="tvtag" name="tvtag"><a href="/tag/television">Television</a></div>
+                        <div class="tagbtn" id="musictag" name="musictag"><a href="/tag/music">Music</a></div>
+                        <div class="tagbtn" id="animaltag" name="animaltag"><a href="/tag/animals">Animals</a></div>
+                        <div class="tagbtn" id="arttag" name="arttag"><a href="/tag/art">Art</a></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="middlepanel">
+                <script>
+                    function visitUser(userlink) {
+                        window.location.href = '/user/' + encodeURIComponent(userlink)
+                    }
+
+                    function viewPost(postId) {
+                        window.location.href = '/post/view/' + encodeURIComponent(postId)
+                    }
+
+                    function upvotePost(postId) {
+                        window.location.href = '/post/upvote/' + encodeURIComponent(postId)
+                    }
+
+                    function downvotePost(postId) {
+                        window.location.href = '/post/downvote/' + encodeURIComponent(postId)
+                    }
+
+                    function editPost(postId) {
+                        window.location.href = '/post/edit/' + encodeURIComponent(postId)
+                    }
+
+                    function deletePost(postId) {
+                        window.location.href = '/post/delete/' + encodeURIComponent(postId)
+                    }
+
+                    function deleteComment(postId, commentId, commenterId) {
+                        const queryParams = {
+                            postId: postId,
+                            commentId: commentId,
+                            commenterId: commenterId
+                        }
+                        const queryString = new URLSearchParams(queryParams).toString()
+                        window.location.href = '/post/deletecomment?' + queryString
+                    }
+
+                    function editCommentText(postId, commentId, commenterId) {
+                        const replyoreditId = 'replyoredit' + commentId
+                        document.getElementById(replyoreditId).innerHTML = 
+                        `<form class="writereply" id="writereply${commentId}" action="/post/editcomment" method="post" enctype="multipart/form-data">
+                            <input type="hidden" name="postId" value="${postId}">
+                            <input type="hidden" name="commentId" value="${commentId}">
+                            <input type="hidden" name="commenterId" value="${commenterId}">
+
+                            <textarea id="replyhere" name="edithere" placeholder="Edit comment..." required></textarea>
+                            <input type="submit" id="reply" name="reply" value="Edit">
+                        </form>`
+                    }
+
+                </script>
+                    <div class="postarea" id="postarea" data-url="{{posts.url}}">
+                        <div class="post">
+                            <div class="postheader">
+                                
+                                <img class="postinfoicon" src="{{posts.userprofilepic}}"/>
+                                <div class="postinfo">
+                                        <div class="postinforow1">
+                                        <span class="title">{{posts.title}}</span>
+                                        <span class="posttag"><a href="/tag/{{posts.tag}}">{{posts.tag}}</a></span>
+                                    </div>
+                                    <div class="postinforow2">
+                                        <span id="username" onclick="visitUser('{{posts.username}}')">{{posts.username}}</span> •
+                                        <span class="date">{{posts.postdate}}</span>
+                                        {{#if this.edited}}
+                                                    <span> • Edited</span>
+                                        {{/if}}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="postcont{{@index}}" class="postcontent">
+                                <div class="postdesc">
+                                    {{posts.description}}
+                                </div>
+
+                                <script>
+                                    {{#if posts.image}}
+                                        document.getElementById("postcont{{@index}}").innerHTML +=
+                                            `<img class="postimage" src="{{posts.image}}">`
+                                    {{/if}}
+                                </script>
+                            </div>
+                        </div>
+                        
+                        <div class="postactions">
+                            <input type="button" class="hot" onclick="upvotePost('{{posts._id}}')">
+                            <div class="votes">
+                                {{posts.upvote}}
+                            </div>
+                            <input type="button" class="cold" onclick="downvotePost('{{posts._id}}')">
+                            <div class="votes">
+                                {{posts.downvote}}
+                            </div>
+                            <input type="button" class="commentbtn">
+                            <div class="comments">
+                                {{posts.comments.length}}
+                            </div>
+
+                            <div class="options-btn">
+                                <button class="options-btn-trigger" onclick="toggleOptions()">ooo</button>
+                                <div class="options-menu">
+                                    <button id="edit-btn" onclick="editPost('{{posts._id}}')">Edit</button>
+                                    <button class="delete-btn" onclick="deletePost('{{posts._id}}')">Delete</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="commentsection">
+                            <form class="writecomment" id="writecomment" action="/post/submitcomment" method="post" enctype="multipart/form-data">
+                                <input type="hidden" name="postId" value="{{posts._id}}">
+
+                                <div class="commentlabel">
+                                    <label id="commentlabel" for="commentlabel">Comments:</label>
+                                </div>
+
+                                <textarea id="commenthere" name="commenthere" placeholder="What are your thoughts?" required></textarea>
+
+                                <input type="submit" id="submit" name="submit" value="Submit">
+                            </form>
+                            
+                            {{#each comments}}
+                                <div class="commentarea">
+                                    <div class="comment">
+                                        <div class="commenterinfo">
+                                            <image class="commentericon" src="{{this.commenterprofilepic}}"/>
+                                            <div class="commentername">
+                                                <a class="userlink" href="/user/{{this.commenter}}">{{this.commenter}}</a> • <span class="date2">{{this.commentdate}}</span>
+                                            </div>
+                                            <div class="options-btn">
+                                                <button class="options-btn-trigger" onclick="toggleOptions()">ooo</button>
+                                                <div class="options-menu">
+                                                    <button id="edit-btn" onclick="editCommentText('{{this.postId}}','{{this._id}}','{{this.commenterId}}')">Edit</button>
+                                                    <button class="delete-btn" onclick="deleteComment('{{this.postId}}','{{this._id}}','{{this.commenterId}}')">Delete</button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="commenttext">
+                                            {{this.commenttext}}
+                                        </div>
+
+                                        <div id="replyoredit{{this._id}}">
+                                            <form class="writereply" id="writereply{{this._id}}" action="/submitreply" method="post" enctype="multipart/form-data">
+                                                <input type="hidden" name="postId" value="{{this.postId}}">
+                                                <input type="hidden" name="commentId" value="{{this._id}}">
+
+                                                <textarea id="replyhere" name="replyhere" placeholder="Write a reply..." required></textarea>
+                                                <input type="submit" id="reply" name="reply" value="Reply">
+                                            </form>
+                                        </div>
+
+                                    </div>
+
+                                    {{#each this.commentreplies}}
+                                        <div class="replysection">
+                                            <div class="respondentinfo">
+                                                <image class="respondenticon" src="{{this.respondentprofilepic}}"/>
+                                                <div class="respondentname">
+                                                    {{this.respondent}} • <span class="date2">{{this.responsedate}}</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="response">
+                                                {{this.response}}
+                                            </div>
+                                        </div>
+                                    {{/each}}
+                                </div>
+                            {{/each}}
+                        </div>
+                    </div>
+            </div>
+
+            <div class="rightpanel">
+                <div id="popularpostsheader">
+                    Popular Posts
+                </div>
+                <div id="popularpostspanel">
+                    {{#each popularPosts}}
+                        <a href="/post/view/{{this._id}}">
+                            <div class="popularpostentry">
+                            {{#if this.image}}
+                                <img src="{{this.image}}" class="thumbnail">
+                                <div class="thumbnailinfo">
+                                    <div class="thumbnailuser">
+                                        {{this.username}}
+                                    </div>
+                                    <div class="thumbnaildesc">
+                                        {{this.title}}
+                                    </div>                                
+                                </div>
+                                {{else}}
+                                    <div class="thumbnailinfo2">
+                                        <div class="thumbnailuser2">
+                                        {{this.username}}
+                                        </div>
+                                        <div class="thumbnaildesc2">
+                                        {{this.title}}
+                                    </div>                                
+                                </div>
+                            {{/if}}                    
+                            </div>
+                        </a>
+                    {{/each}}
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

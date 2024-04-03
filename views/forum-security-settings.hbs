@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>Security Setting</title>
+        <link rel="stylesheet" type="text/css" href="../css/forum-security-setting.css"/>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    </head>
+
+    <header id="mainheader">
+        <a href="/" class="logo"></a>
+        <form id="searcharea" action="/search" method="get">
+            <input type="text" name="search" id="search" placeholder="Search HotOrCold">
+            <button type="submit" class='btn' id="searchbtn"></button>  
+        </form>
+                <style>
+                    #viewbtn {
+                        background-image: url({{currUser.profilepic}});
+                        margin-top: auto;
+                        margin-bottom: auto;
+                    }
+                </style>
+
+                <script>
+                    window.onload = () => {
+                        isLoggedIn("{{currUser.username}}");
+                    }
+                </script>
+    </header>
+
+    <body>
+        <div class="container">
+            <h1><span style="color: #ec3232">Change</span><span style="color: #2992cf"> Password</span></h1>
+            <form id="passwordForm">
+              <label for="currentPassword">Current Password:</label><br>
+              <input type="password" id="currentPassword" name="currentPassword" required><br><br>
+        
+              <label for="newPassword">New Password:</label><br>
+              <input type="password" id="newPassword" name="newPassword" required><br><br>
+        
+              <label for="confirmPassword">Confirm Password:</label><br>
+              <input type="password" id="confirmPassword" name="confirmPassword" required><br><br>
+        
+              <button type="submit">Change Password</button>
+            </form>
+          </div>
+
+          <script src="../scripts/forum.js"></script>
+          <script src="../scripts/forum-security-setting.js"></script>
+    </body>
+
+</html>

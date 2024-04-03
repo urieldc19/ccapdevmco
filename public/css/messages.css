@@ -1,0 +1,23 @@
+.error-message {
+    background-color: #863a41;
+    color: white;
+    border: 1px solid #690404;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    align-items: center;
+    align-self: center;
+    justify-content: center;
+    display: flex;
+}
+
+.success-message {
+    background-color: #062753;
+    color: white;
+    border: 1px solid #062753;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    align-items: center;
+    align-self: center;
+    justify-content: center;
+    display: flex;
+}

@@ -1,0 +1,188 @@
+:root {
+    font-family: 'Poppins', sans-serif;
+    font-size: 25px;
+}
+
+body {
+    background-color: #001025;
+    margin-right: 15px;
+    margin-left: 15px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 25px;
+}
+
+header {
+    margin-right: 40px;
+    margin-left: 40px;
+    z-index: 3;
+    background-color: #001025;
+    position: sticky;
+    top: 0;
+    height: 40px;
+    display: flex;
+	flex-direction: row;
+    padding: 15px 0px;
+    align-content: space-between;
+    border-bottom: #062753 solid 0.2px;
+}
+
+.logo {
+    background-image: url('../images/textlogo.png');
+    background-size: 160px 40px;
+    width: 160px;
+    height: 40px;
+    margin: 0;
+    padding: 0;
+}
+
+h1{
+    font-size: 80px;
+    font-weight: bold;
+    color: white;
+    text-align: left;
+    margin-bottom: -20px;
+}
+
+h2{
+    margin-top: 5px;
+    font-size: 24px;
+    font-style: italic;
+    color: white;
+    text-align: left;
+    margin-left: 5px;
+}
+
+.mainpanel {
+    margin-top: -25px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.leftpanel {
+    width: auto;
+}
+
+img{
+    width: 630px;
+    height: 540px;
+}
+
+.rightpanel {
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.headerslogan{
+   height: auto;
+   margin-bottom: 10px;
+}
+
+.loginpanel{
+    background-color: #001025;
+    width: auto;
+    height: auto;
+}
+
+.form-group-header {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    align-items:start;
+    justify-content: start;
+}
+
+.form-group-header label {
+    margin-top: 15px;
+    display: block;
+    margin-left: 15px;
+    font-size: 14px;
+    color: white;
+    margin-bottom: 3px;
+}
+
+.form-group {
+    margin-top: 15px;
+    margin-bottom: 10px;
+    align-items:flex-start;
+    justify-content: flex-start;
+}
+
+.form-group label {
+    margin-top: 15px;
+    display: block;
+    margin-left: 15px;
+    font-size: 14px;
+    color: white;
+    margin-bottom: 3px;
+}
+
+.form-group input {
+    margin-top: 15px;
+    margin-left: 15px;
+    width: 250px;
+    padding: 10px;
+    border: 0.5px solid #ccc;
+    border-radius: 30px;
+    color: white;
+    background-color: #062753;
+    font-family: 'Poppins', sans-serif;
+}
+
+.form-group input[type="submit"] {
+    background-color: #062753;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 30px;
+}
+
+.form-group input[type="submit"]:hover {
+    background-color: #CE320C;
+}
+
+.form-group-register {
+    margin-top: 15px;
+    margin-bottom: 10px;
+}
+
+.form-group-register label {
+    margin-top: 15px;
+    display: block;
+    margin-left: 30px;
+    font-size: 14px;
+    color: white;
+    margin-bottom: 3px;
+}
+
+.form-group-register a {
+    color: #ff0000; 
+    text-decoration: none;
+    font-size: 14px; 
+}
+
+.form-group-register a:hover {
+    color: #CE320C; 
+}
+
+p{
+    font-size: 10px;
+    color: white;
+    text-align: center;
+}
+
+a {
+    font-size: 10px;
+    color: white;
+    margin-top: 700px;
+    text-align: center;
+    text-decoration: none; 
+}
+
+a :hover {
+    color: white;
+}
+
+footer {
+    margin-top: 150px;
+}
