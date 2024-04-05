@@ -25,7 +25,7 @@
             }
 
             function newPost() {
-                window.location.href = "/create/";
+                window.location.href = "/post/create";
             }
         </script>
 
@@ -174,7 +174,7 @@
                                 </div>  
                             
                                 <div class="options-btn">
-                                    <button class="options-btn-trigger" onclick="toggleOptions()">ooo</button>
+                                    <button class="options-btn-trigger">ooo</button>
                                     <div class="options-menu">
                                         <button id="edit-btn" onclick="editPost('{{this._id}}')">Edit</button>
                                         <button class="delete-btn" onclick="deletePost('{{this._id}}')">Delete</button>

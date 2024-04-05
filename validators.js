@@ -21,7 +21,9 @@ const loginValidation = [
 
 const securityValidation = [
 
-    body('confirmPassword').isLength({min:0}).withMessage("")
+    body('currentPassword').not().isEmpty().withMessage("Current password is required."),
+    body('newPassword').not().isEmpty().withMessage("New password is required."),
+    body('confirmPassword').isLength({min:0}).withMessage("Confirm password is required")
     .custom((value, {req}) => {
         if (value !== req.body.newPassword) {
             throw new Error ("Passwords must match.");

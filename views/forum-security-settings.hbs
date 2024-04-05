@@ -34,7 +34,8 @@
     <body>
         <div class="container">
             <h1><span style="color: #ec3232">Change</span><span style="color: #2992cf"> Password</span></h1>
-            <form id="passwordForm">
+            <form id="passwordForm" action="/editPass" method="POST">
+            {{>messages}}
               <label for="currentPassword">Current Password:</label><br>
               <input type="password" id="currentPassword" name="currentPassword" required><br><br>
         
@@ -48,8 +49,7 @@
             </form>
           </div>
 
-          <script src="../scripts/forum.js"></script>
-          <script src="../scripts/forum-security-setting.js"></script>
+          <script src="/scripts/forum.js" defer></script>
     </body>
 
 </html>

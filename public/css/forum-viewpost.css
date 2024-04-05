@@ -782,3 +782,12 @@ header {
     color: white;
     text-decoration: none;
   }
+
+  #edited {
+    font-family: 'Poppins', sans-serif;
+    font-style: italic;
+    color: #D3D3D3;
+    font-size: 13px;
+    margin-left: 5px;
+    margin-top: 2.5px;
+}

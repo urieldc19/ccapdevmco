@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController.js');
-const {registerValidation, loginValidation, signoutUser} = require('../validators.js');
+const {registerValidation, loginValidation, signoutUser, securityValidation} = require('../validators.js');
 const {isPub, isPriv} = require('../middlewares/checkAuth.js');
 
 
@@ -17,8 +17,15 @@ router.get('/register', isPub, (req, res) => {
     });
 }); 
 
+router.get('/editPass', isPriv, (req, res) => {
+    res.render('forum-security-settings', {
+        pageTitle: 'Security Setting'
+    });
+}); 
+
 router.post('/register', isPub, registerValidation, userController.registerUser);
 router.post('/login', isPub, loginValidation, userController.loginUser);
 router.get('/signout', isPriv, userController.signoutUser);
+router.post('/editPass', isPriv, securityValidation, userController.changePassword);
 
 module.exports = router;

@@ -17,6 +17,11 @@
             function view() {
                 window.location.href = "/profile";
             }
+
+            function getCurrUsername() {
+                return "{{currUser.username}}";
+            }
+
         </script>
 
         <script src="/scripts/forum.js" defer></script>
@@ -28,21 +33,17 @@
             <input type="text" name="search" id="search" placeholder="Search HotOrCold">
             <button type="submit" class='btn' id="searchbtn"></button>  
         </form>
-        {{#each currUser}}
-            {{#if this.username}}
                 <style>
                     #viewbtn {
-                    background-image: url({{this.profilepic}});
+                    background-image: url({{currUser.profilepic}});
                     }
                 </style>
 
                 <script>
                     window.onload = () => {
-                        isLoggedIn("{{this.username}}");
+                        isLoggedIn("{{currUser.username}}");
                     }
                 </script>
-            {{/if}}
-        {{/each}}
     </header>
 
     <body>
@@ -98,14 +99,13 @@
                         window.location.href = '/post/delete/' + encodeURIComponent(postId)
                     }
 
-                    function deleteComment(postId, commentId, commenterId) {
+                    function deleteComment(postId, commentId) {
                         const queryParams = {
                             postId: postId,
-                            commentId: commentId,
-                            commenterId: commenterId
-                        }
-                        const queryString = new URLSearchParams(queryParams).toString()
-                        window.location.href = '/post/deletecomment?' + queryString
+                            commentId: commentId
+                        };
+                        const queryString = new URLSearchParams(queryParams).toString();
+                        window.location.href = '/post/deletecomment?' + queryString;
                     }
 
                     function editCommentText(postId, commentId, commenterId) {
@@ -192,19 +192,19 @@
                                 <input type="submit" id="submit" name="submit" value="Submit">
                             </form>
                             
-                            {{#each comments}}
+                            {{#each posts.comments}}
                                 <div class="commentarea">
                                     <div class="comment">
                                         <div class="commenterinfo">
                                             <image class="commentericon" src="{{this.commenterprofilepic}}"/>
                                             <div class="commentername">
-                                                <a class="userlink" href="/user/{{this.commenter}}">{{this.commenter}}</a> • <span class="date2">{{this.commentdate}}</span>
+                                                <a class="userlink" href="/user/{{this.commenterusername}}">{{this.commenterusername}}</a> • <span class="date2">{{this.commentdate}}</span>
                                             </div>
                                             <div class="options-btn">
                                                 <button class="options-btn-trigger" onclick="toggleOptions()">ooo</button>
                                                 <div class="options-menu">
                                                     <button id="edit-btn" onclick="editCommentText('{{this.postId}}','{{this._id}}','{{this.commenterId}}')">Edit</button>
-                                                    <button class="delete-btn" onclick="deleteComment('{{this.postId}}','{{this._id}}','{{this.commenterId}}')">Delete</button>
+                                                    <button class="delete-btn" onclick="deleteComment('{{this.postId}}','{{this._id}}')">Delete</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -214,7 +214,7 @@
                                         </div>
 
                                         <div id="replyoredit{{this._id}}">
-                                            <form class="writereply" id="writereply{{this._id}}" action="/submitreply" method="post" enctype="multipart/form-data">
+                                            <form class="writereply" id="writereply{{this._id}}" action="/post/submitreply" method="post" enctype="multipart/form-data">
                                                 <input type="hidden" name="postId" value="{{this.postId}}">
                                                 <input type="hidden" name="commentId" value="{{this._id}}">
 
@@ -225,7 +225,7 @@
 
                                     </div>
 
-                                    {{#each this.commentreplies}}
+                                    {{#each this.replies}}
                                         <div class="replysection">
                                             <div class="respondentinfo">
                                                 <image class="respondenticon" src="{{this.respondentprofilepic}}"/>
@@ -235,7 +235,7 @@
                                             </div>
 
                                             <div class="response">
-                                                {{this.response}}
+                                                {{this.responsetext}}
                                             </div>
                                         </div>
                                     {{/each}}

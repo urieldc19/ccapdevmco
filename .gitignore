@@ -3,7 +3,7 @@
 
 ### Node ###
 # Logs
-.env
+*.env
 
 logs
 *.log

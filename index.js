@@ -18,7 +18,6 @@ const authRouter = require('./routes/auth.js');
 const Post = require("./database/models/Post.js")
 const Comment = require("./database/models/Comment.js")
 const User = require("./database/models/User.js")
-const Log = require("./database/models/Log.js")
 const path = require('path') // our path directory
 const bodyParser = require('body-parser');
 const session = require('express-session');
@@ -32,10 +31,8 @@ app.use(fileUpload()) // for fileuploads
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
-const user = require('./database/models/regUser.js')
-
 const fs = require('fs');
-const { loginUser } = require('./controllers/userController.js')
+const { loginUser, changePassword } = require('./controllers/userController.js')
 
 const partial = fs.readFileSync('./views/partials/messages.hbs', 'utf8');
 hbs.registerPartial('messages', partial);
@@ -110,6 +107,32 @@ app.get('/', async function (req, res) {
     }
 
     await User.create(user3);
+
+    const user4 = {
+      username: "foodie",
+      email: "foodie@mail.com",
+      password: "ddd",
+      bio: "FOOD is LIFE!",
+      profilepic: "/images/fileuploads/user3.png",
+      headerpic: "/images/fileuploads/food.png",
+      upvotedposts: [],
+      downvotedposts: []
+    }
+    
+    await User.create(user4);
+
+    const user5 = {
+      username: "girlboss",
+      email: "slayable@mail.com",
+      password: "sss",
+      bio: "On fire and feeling fine",
+      profilepic: "/images/fileuploads/user4.jpg",
+      headerpic: "/images/fileuploads/kiss.jpg",
+      upvotedposts: [],
+      downvotedposts: []
+    }
+
+    await User.create(user5);
   }
 
   const postdate = new Date()
@@ -155,6 +178,63 @@ app.get('/', async function (req, res) {
     }
     
     await Post.create(newPost2);
+  } 
+
+  const post3 = await Post.find({title: "Do you know the breed of this cute dog?"}).count();
+
+  if (!post3) {
+      const newPost3 = {
+      username: "thedogist",
+      userprofilepic: "/images/fileuploads/profile.jpg",
+      title: "Do you know the breed of this cute dog?",
+      description: "I just can't my eyes off of this dog <3",
+      tag: "Animals",
+      postdate: postfulldate,
+      image: '/images/fileuploads/dog.jpg',
+      upvote: 0,
+      downvote: 0,
+      edited: false
+    }
+    
+    await Post.create(newPost3);
+  } 
+
+  const post4 = await Post.find({title: "New cafe in taft!"}).count();
+
+  if (!post4) {
+      const newPost4 = {
+      username: "foodie",
+      userprofilepic: "/images/fileuploads/user3.png",
+      title: "New cafe in taft!",
+      description: "Don't missed out this new cafe! I heard their spanish latte is good! :)",
+      tag: "News",
+      postdate: postfulldate,
+      image: '/images/fileuploads/cafe.jpg',
+      upvote: 0,
+      downvote: 0,
+      edited: false
+    }
+    
+    await Post.create(newPost4);
+  } 
+
+  const post5 = await Post.find({title: "New shades of Rhode Skin Peptide Lip Treatment!!"}).count();
+
+  if (!post5) {
+      const newPost5 = {
+      username: "girlboss",
+      userprofilepic: "/images/fileuploads/user4.jpg",
+      title: "New shades of Rhode Skin Peptide Lip Treatment!!",
+      description: "Approve or not?! WDYT girlies? ;)",
+      tag: "Fashion",
+      postdate: postfulldate,
+      image: '/images/fileuploads/lippie.jpg',
+      upvote: 0,
+      downvote: 0,
+      edited: false
+    }
+    
+    await Post.create(newPost5);
   } 
 
     const currUser = await User.findOne({username: req.session.username});
@@ -223,6 +303,11 @@ app.get('/security-settings', async(req, res) => {
   }
   
 })
+
+app.get('/editPass', async(req,res) => {
+  changePassword(req, res);
+})
+
 
 function getFullDate(month, day, year, hour, minutes) {
   var sMonth

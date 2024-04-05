@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt');
+//const bcrypt = require('bcrypt');
 const {validationResult} = require('express-validator');
 const User = require('../database/models/User.js');
 
@@ -16,14 +16,13 @@ exports.registerUser = async (req, res) => {
 
             if (accountemail || accountusername) {
                 req.flash('error_msg', 'User already exists. Please login.');
-                res.redirect('/login');
+                res.redirect('/register');
             } 
             else 
             {
                 const saltRounds = 10;
 
-                bcrypt.hash(password, saltRounds, async (err, hashed) => 
-                {
+                
                     const newUser = 
                     {
                         username: username,
@@ -44,7 +43,7 @@ exports.registerUser = async (req, res) => {
                     console.log(req.session);
 
                     res.redirect('/');
-                });
+                
             }
         } catch {
     
@@ -58,7 +57,7 @@ exports.loginUser = async (req, res) => {
     if (errors.isEmpty()) 
     {
         const { username, password } = req.body;
-
+        //console.log("Username received:", username);
         try {
             const currUser = await User.findOne({username: username});
             
@@ -95,4 +94,45 @@ exports.signoutUser = (req, res) => {
     }
 
     res.redirect('/');
+};
+
+exports.changePassword = async (req, res) => {
+    const errors = validationResult(req);
+
+    if (errors.isEmpty()) {
+        const { username, password, currentPassword, newPassword, confirmPassword } = req.body;
+        console.log("Username received:", username);
+        try {
+            const currUser = await User.findOne({username: req.session.username});
+            
+            if (currUser) {
+                if (currentPassword === currUser.password) {
+                    if (newPassword === confirmPassword && newPassword !== currUser.password) {
+                        currUser.password = newPassword;
+                        await currUser.save(); 
+
+                        req.flash('success_msg', 'Password changed successfully');
+                        res.redirect('/user/'+ currUser.username);
+                    } else {
+                        req.flash('error_msg', 'New password and confirm password do not match! Please try again.');
+                        res.redirect('/editPass');
+                    }
+                } else {
+                    req.flash('error_msg', 'Current password is incorrect. Please try again.');
+                    res.redirect('/editPass');
+                }
+            } else {
+                req.flash('error_msg', 'User not found!');
+                res.redirect('/editPass');
+            }
+        } catch (err) {
+            console.error(err);
+            req.flash('error_msg', 'Something went wrong!');
+            res.redirect('/editPass');
+        }
+    } else {
+        const messages = errors.array().map((item) => item.msg);
+        req.flash('error_msg', messages.join(' '));
+        res.redirect('/editPass');
+    }
 };

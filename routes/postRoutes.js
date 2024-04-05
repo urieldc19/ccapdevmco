@@ -1,7 +1,6 @@
 const router = require('express').Router();
 
 const Post = require("../database/models/Post.js")
-const Comment = require("../database/models/Comment.js")
 const User = require("../database/models/User.js")
 
 const path = require('path') // our path directory
@@ -11,11 +10,14 @@ const path = require('path') // our path directory
   router.get('/view/:id', async(req,res) => {
     const currUser = await User.findOne({username: req.session.username});
     const postId = req.params.id;
-    const posts = await Post.findById(postId);
-    const comments = await Comment.find({postId: posts._id})
     const popularPosts = await Post.find({}).sort({upvote: -1}).limit(3);
-    
-    res.render('forum-viewpost', {currUser, posts, comments, popularPosts});
+    const posts = await Post.findById(postId);
+
+    if (posts) {
+      res.render('forum-viewpost', {posts, currUser, popularPosts});
+    } else {
+      res.redirect('/')
+    }
   });
 
   // CREATE POST
@@ -106,11 +108,17 @@ router.get('/edit/:id', async(req,res) => {
   const posts = await Post.findById(postId);
   const currUser = await User.findOne({username: req.session.username});
 
-  if (posts.username === currUser.username) {
-    res.render('forum-editpost', {currUser,posts});
-  } else {
-    res.redirect('/')
+  if (currUser) {
+      if (posts.username === currUser.username) {
+      res.render('forum-editpost', {currUser,posts});
+      } else {
+        res.redirect('/post/view/' + encodeURIComponent(postId))
+      }
   }
+  else {
+    res.redirect('/post/view/' + encodeURIComponent(postId))
+  }
+  
   
 });
 
@@ -158,131 +166,121 @@ router.post('/submitedit/:id', async function (req, res) {
 router.get('/delete/:id', async function (req, res) {
   const currUser = await User.findOne({username: req.session.username});
   const post = await Post.findById(req.params.id);
+  const postId = post._id;
 
   console.log(req.params);
-  if (currUser.username === post.username)
-  {
-    try {
-      await Post.deleteOne({_id: req.params.id});
-    } catch (error) {
-      console.error(error);
-      res.status(500).send('Internal Server Error');
+  if (currUser) {
+    if (currUser.username === post.username)
+    {
+      try {
+        await Post.deleteOne({_id: req.params.id});
+      } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+      }
+    } else {
+      res.redirect('/post/view/' + encodeURIComponent(postId))
     }
+  } else {
+    res.redirect('/post/view/' + encodeURIComponent(postId))
   }
-  res.redirect('/');
 });
 
 // SUBMIT COMMENT
 
-/*router.post('/submitcomment', async function (req, res) {
+router.post('/submitcomment', async function (req, res) {
+  const currUser = await User.findOne({username: req.session.username})
+  console.log("User Info: " + currUser)
   const postId = req.body.postId
   console.log("Post Id: " + postId)
-  const currUser = await User.findOne()
   const post = await Post.findById(postId)
 
-  // GET DATE
-  const commentdate = new Date()
-  const commentday = commentdate.getDate()
-  const commentmonth = commentdate.getMonth() + 1
-  const commentyear = commentdate.getFullYear()
-  const commenthour = commentdate.getHours()
-  const commentminutes = commentdate.getMinutes().toString().padStart(2, '0');
-  const commentfulldate = getFullDate(commentmonth, commentday, commentyear, commenthour, commentminutes)
-
   if (post) {
-    const newComment = {
-      postId: postId,
-      commenter: currUser.username,
-      commenterprofilepic: currUser.profilepic,
-      commenttext: req.body.commenthere,
-      commentdate: commentfulldate,
-      commentreplies: []
+    if (currUser) {
+      const commentdate = new Date()
+      const commentday = commentdate.getDate()
+      const commentmonth = commentdate.getMonth() + 1
+      const commentyear = commentdate.getFullYear()
+      const commenthour = commentdate.getHours()
+      const commentminutes = commentdate.getMinutes().toString().padStart(2, '0');
+      const commentfulldate = getFullDate(commentmonth, commentday, commentyear, commenthour, commentminutes)
+
+      const newComment = {
+        postId: postId,
+        commenterId: currUser._id,
+        commenterusername: currUser.username,
+        commenterprofilepic: currUser.profilepic,
+        commenttext: req.body.commenthere,
+        commentdate: commentfulldate,
+        isEdited: false,
+        replies: []
+      }
+
+      post.comments.push(newComment)
+      await post.save()
+      currUser.comments.push(postId)
+      await currUser.save()
+
+      res.redirect('/post/view/' + encodeURIComponent(postId))
+    } else {
+      res.redirect('/post/view/' + encodeURIComponent(postId))
     }
-
-    post.comments.push(newComment)
-    await post.save()
-    currUser.comments.push(postId); 
-    await currUser.save();
-
-    res.redirect('/post/' + encodeURIComponent(postId));
   } else {
-    console.log("Error")
+    console.log('Post not found')
     console.error()
   }
-});*/
+});
 
-router.post('/submitcomment', async function (req, res) {
-  const postId = req.body.postId
-  console.log("Post Id: " + postId)
-  const currUser = await User.findOne()
-  console.log("User Info: " + currUser)
-
-  try {
-    const commentdate = new Date()
-    const commentday = commentdate.getDate()
-    const commentmonth = commentdate.getMonth() + 1
-    const commentyear = commentdate.getFullYear()
-    const commenthour = commentdate.getHours()
-    const commentminutes = commentdate.getMinutes().toString().padStart(2, '0');
-    const commentfulldate = getFullDate(commentmonth, commentday, commentyear, commenthour, commentminutes)
-  
-    const newComment = {
-      postId : postId,
-      commenterId : currUser._id,
-      commenter : currUser.username,
-      commenterprofilepic : currUser.profilepic,
-      commenttext : req.body.commenthere,
-      commentdate : commentfulldate,
-      isEdited : false
-    }
-
-    await Comment.create(newComment)
-    res.redirect('/post/view/' + encodeURIComponent(postId))
-  } catch (err) {
-    console.log(err)
-  } 
-})
+// SUBMIT REPLY
 
 router.post('/submitreply', async function (req, res) {
-  const currUser = await User.findOne()
-  console.log("User Id: " + currUser)
+  const currUser = await User.findOne({username: req.session.username});
+  console.log("User Info: " + currUser)
   const postId = req.body.postId
-  console.log("Post Id: " + postId)
+  const post = await Post.findById(postId);
+  console.log("Post Info: " + post)
   const commentId = req.body.commentId
   console.log("Comment Id: " + commentId)
 
-  const post = await Post.findById(postId)
-
   if (post) {
-    const commentIndex = post.comments.findIndex(comment => comment._id.toString() === commentId)
+    const commentToReply = await post.comments.id(commentId)
 
-    if (commentIndex !== -1) {
-      const replydate = new Date()
-      const replyday = replydate.getDate()
-      const replymonth = replydate.getMonth() + 1
-      const replyyear = replydate.getFullYear()
-      const replyhour = replydate.getHours()
-      const replyminutes = replydate.getMinutes().toString().padStart(2, '0');
-      const replyfulldate = getFullDate(replymonth, replyday, replyyear, replyhour, replyminutes)
-      
-      const newReply = {
-        respondent: currUser.username,
-        respondentprofilepic: currUser.profilepic,
-        response: req.body.replyhere,
-        responsedate: replyfulldate
-      };
+    try {
+      if (commentToReply) {
+        if (currUser !== null) {
+          const replydate = new Date()
+          const replyday = replydate.getDate()
+          const replymonth = replydate.getMonth() + 1
+          const replyyear = replydate.getFullYear()
+          const replyhour = replydate.getHours()
+          const replyminutes = replydate.getMinutes().toString().padStart(2, '0');
+          const replyfulldate = getFullDate(replymonth, replyday, replyyear, replyhour, replyminutes)
+          
+          const newReply = {
+            respondentId: currUser._id,
+            respondentusername: currUser.username,
+            respondentprofilepic: currUser.profilepic,
+            responsetext: req.body.replyhere,
+            responsedate: replyfulldate,
+            isEdited: false
+          }
 
-      post.comments[commentIndex].commentreplies.push(newReply)
-      await post.save()
-      
-      post.comments[commentIndex].commentreplies.sort((a, b) => new Date(a.responsedate) - new Date(b.responsedate));
+          commentToReply.replies.push(newReply)
+          commentToReply.replies.sort((a, b) => new Date(a.responsedate) - new Date(b.responsedate))
+          await post.save()
 
-      currUser.comments.push(postId); 
-      await currUser.save();
-      res.redirect('/post/view/' + encodeURIComponent(postId))
-    } else {
-      console.log("Comment not found")
-      res.status(404).send("Comment not found")
+          currUser.comments.push(postId); 
+          await currUser.save();
+          res.redirect('/post/view/' + encodeURIComponent(postId))
+        } else {
+          return res.status(403).send('Unauthorized')
+        }
+      } else {
+        return res.status(404).send('Comment not found')
+      }
+    } catch (err) {
+      console.error(err)
+      res.status(500).send('Internal Server Error')
     }
   } else {
     console.log("Post not found")
@@ -291,119 +289,78 @@ router.post('/submitreply', async function (req, res) {
 });
 
 // EDIT COMMENT
-/*router.post('/editcomment', async function (req, res) {
-  const currUser = await User.findOne({username: req.session.username});
-  const post = await Post.findById(req.body.postId);
-  if (currUser.username === req.body.commenter) {
-    try {
-        console.log(req.params)
-        const commentToEdit = post.comments.find(comment =>
-            comment.commenter === req.body.commenter &&
-            comment.commentdate.toString() === req.body.date &&
-            comment.commenttext === req.body.comment
-        );
-
-        if (!commentToEdit) {
-            return res.status(404).send('Comment not found or unauthorized');
-        }
-
-        if (currUser.username !== commentToEdit.commenter) {
-            return res.status(403).send('Unauthorized');
-        }
-
-        if (currUser.username === req.body.commenter)
-        {
-          commentToEdit.commenttext = req.body.newcomment;
-          await post.save();
-        }
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Internal Server Error');
-    }
-  }
-  res.redirect('back');
-});*/
-
 router.post('/editcomment', async function (req, res) {
-  const currUser = await User.findOne()
+  const currUser = await User.findOne({username: req.session.username});
   console.log("User Info: " + currUser)
-  const postId = req.body.postId
-  console.log("Post Id: " + postId)
+  const post = await Post.findById(req.body.postId);
+  const postId = req.query.postId;
+  console.log("Post Info: " + post)
   const commentId = req.body.commentId
   console.log("Comment Id: " + commentId)
-  const commenterId = req.body.commenterId
-  console.log("Commenter Id: " + commenterId)
 
-  if ((currUser._id).equals(commenterId)) {
-      await Comment.findByIdAndUpdate(commentId, {commenttext: req.body.edithere}, {isEdited: true})
+  try {
+    if (post) {
+      const commentToEdit = await post.comments.id(commentId)
 
-      res.redirect('/post/view/' + encodeURIComponent(postId))
-  } else {
-    console.log('Error')
+        if (commentToEdit) {
+          if ((currUser._id).equals(commentToEdit.commenterId)) {
+            commentToEdit.commenttext = req.body.edithere
+            await post.save()
+          } else {
+            res.redirect('/post/view/' + encodeURIComponent(postId))
+          }
+        } else {
+          res.redirect('/post/view/' + encodeURIComponent(postId))
+        }
+    }
+  } catch (err) {
+    res.redirect('/post/view/' + encodeURIComponent(postId))
   }
 });
 
 // DELETE COMMENT
 
-/*router.get('/deletecomment/:id', async function (req, res) {
-  const currUser = await User.findOne({username: req.session.username});
-
-  if (currUser.username === req.params.username) {
-    try {
-        const post = await Post.findById(req.params.id);
-
-        const commentToDelete = post.comments.find(comment => 
-            comment.commenter === req.params.username &&
-            comment.commentdate.toString() === req.params.date &&
-            comment.commenttext === req.params.comment
-        );
-
-        if (!commentToDelete) {
-            return res.status(404).send('Comment not found or unauthorized');
-        }
-
-        if (currUser.username !== commentToDelete.commenter) {
-            return res.status(403).send('Unauthorized');
-        }
-          await post.updateOne({ $pull: { comments: commentToDelete } });
-        
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Internal Server Error');
-    }
-  }
-  res.redirect('back');
-});*/
-
-router.get('/deletecomment', async function (req, res) {
-  const currUser = await User.findOne()
-  console.log("User Info: " + currUser)
-  const postId = req.query.postId
-  console.log("Post Id: " + postId)
+router.get('/deletecomment/', async function (req, res) {
+  const currUser = await User.findOne({username: req.session.username})
+  const post = await Post.findById(req.query.postId)
+  const postId = req.query.postId;
   const commentId = req.query.commentId
-  console.log("Comment Id: " + commentId)
-  const commenterId = req.query.commenterId
-  console.log("Commenter Id: " + commenterId)
 
-  if ((currUser._id).equals(commenterId)){
-    await Comment.deleteOne({_id: commentId})
+  if (post) {
+    const commentToDelete = await post.comments.id(commentId)
 
-    res.redirect('/post/view/' + encodeURIComponent(postId))
+    try {
+      if (commentToDelete) {
+        if ((currUser._id).equals(commentToDelete.commenterId)) {
+          await Post.updateOne({_id: post._id}, {$pull: {comments: {_id: commentToDelete._id}}})
+          await post.save()
+        } else {
+          res.redirect('/post/view/' + encodeURIComponent(postId))
+        } 
+      } else {
+        res.redirect('/post/view/' + encodeURIComponent(postId))
+      }
+    } catch (err) {
+      res.redirect('/post/view/' + encodeURIComponent(postId))
+    }
   }
 });
   
-  // UPVOTE & DOWNVOTE
-  
-  router.get('/upvote/:id', async (req, res) => {
-    const postId = req.params.id;
-    console.log(req.params);
-    try {
-        const post = await Post.findById(postId);
-        if (post) {
-          const currUser = await User.findOne({username: req.session.username});
+// UPVOTE & DOWNVOTE
+
+router.get('/upvote/:id', async (req, res) => {
+  const postId = req.params.id;
+  console.log(req.params);
+  try {
+      const post = await Post.findById(postId);
+      if (post) {
+        const currUser = await User.findOne({username: req.session.username});
+
+        if (currUser) {
+
           const isPostDownvoted = currUser.downvotedposts.includes(postId);
           const isPostUpvoted = currUser.upvotedposts.includes(postId);
-  
+
           if (!isPostDownvoted && !isPostUpvoted) {
               await Post.updateOne({ _id: postId }, { $inc: { upvote: 1 } });
               currUser.upvotedposts.push(postId); 
@@ -416,25 +373,32 @@ router.get('/deletecomment', async function (req, res) {
             await Post.updateOne({ _id: postId }, { $inc: { upvote: 1 } });
               currUser.upvotedposts.push(postId); 
           }
-          await currUser.save();
+          await currUser.save();          
+        } else {
+          res.redirect('/post/view/' + encodeURIComponent(postId))
         }
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Internal Server Error');
-    }
-    res.redirect('back');
-  });
+      } else {
+        res.redirect('/post/view/' + encodeURIComponent(postId))
+      }
+  } catch (err) {
+      console.error(err);
+      res.status(500).send('Internal Server Error');
+  }
+});
+
+router.get('/downvote/:id', async(req,res) => { 
+  const postId = req.params.id;
   
-  router.get('/downvote/:id', async(req,res) => { 
-    const postId = req.params.id;
+  try {
+      const post = await Post.findById(postId);
+      if (post) {
+        const currUser = await User.findOne({username: req.session.username});
     
-    try {
-        const post = await Post.findById(postId);
-        if (post) {
-          const currUser = await User.findOne({username: req.session.username});
+        if (currUser) {
+
           const isPostDownvoted = currUser.downvotedposts.includes(postId);
           const isPostUpvoted = currUser.upvotedposts.includes(postId);
-  
+
           if (!isPostDownvoted && !isPostUpvoted) {
               await Post.updateOne({ _id: postId }, { $inc: { downvote: 1 } });
               currUser.downvotedposts.push(postId); 
@@ -447,37 +411,42 @@ router.get('/deletecomment', async function (req, res) {
             await Post.updateOne({ _id: postId }, { $inc: { downvote: 1 } });
             currUser.downvotedposts.push(postId); 
           }
-          await currUser.save();
+          await currUser.save();          
+        } else {
+          res.redirect('/post/view/' + encodeURIComponent(postId))
         }
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Internal Server Error');
-    }
-    res.redirect('back');
-  });
-
-  function getFullDate(month, day, year, hour, minutes) {
-    var sMonth
-    var fulldate
-  
-    switch(month) {
-      case 1: sMonth = "January"; break
-      case 2: sMonth = "February"; break
-      case 3: sMonth = "March"; break
-      case 4: sMonth = "April"; break
-      case 5: sMonth = "May"; break
-      case 6: sMonth = "June"; break
-      case 7: sMonth = "July"; break
-      case 8: sMonth = "August"; break
-      case 9: sMonth = "September"; break
-      case 10: sMonth = "October"; break
-      case 11: sMonth = "November"; break
-      case 12: sMonth = "December"; break
-    }
-  
-    fulldate = sMonth + " " + day + ", " + year + " " + hour + ":" + minutes
-  
-    return fulldate
+      } else {
+        res.redirect('/post/view/' + encodeURIComponent(postId))
+      }
+  } catch (err) {
+      console.error(err);
+      res.status(500).send('Internal Server Error');
   }
+});
+
+
+function getFullDate(month, day, year, hour, minutes) {
+  var sMonth
+  var fulldate
+
+  switch(month) {
+    case 1: sMonth = "January"; break
+    case 2: sMonth = "February"; break
+    case 3: sMonth = "March"; break
+    case 4: sMonth = "April"; break
+    case 5: sMonth = "May"; break
+    case 6: sMonth = "June"; break
+    case 7: sMonth = "July"; break
+    case 8: sMonth = "August"; break
+    case 9: sMonth = "September"; break
+    case 10: sMonth = "October"; break
+    case 11: sMonth = "November"; break
+    case 12: sMonth = "December"; break
+  }
+
+  fulldate = sMonth + " " + day + ", " + year + " " + hour + ":" + minutes
+
+  return fulldate
+}
 
 module.exports = router;
