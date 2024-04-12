@@ -32,4 +32,5 @@ const securityValidation = [
     })
 ];
 
+
 module.exports = {registerValidation, loginValidation, securityValidation};

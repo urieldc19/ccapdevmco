@@ -97,19 +97,6 @@
                         function deletePost(postId) {
                             window.location.href = '/post/delete/' + encodeURIComponent(postId)
                         }
-
-                        function isPostedbyCurrUser(postusername) {
-                            if (postusername === getCurrUsername()) {
-                                document.getElementById('options-btn').innerHTML = 
-                                `
-                                <button class="options-btn-trigger">ooo</button>
-                                    <div class="options-menu">
-                                        <button id="edit-btn" onclick="editPost('{{this._id}}')">Edit</button>
-                                        <button class="delete-btn" onclick="deletePost('{{this._id}}')">Delete</button>
-                                    </div>
-                                `;
-                            }
-                        }
                     </script>
                     
                     <div class="postarea" name="{{this.url}}">
@@ -159,13 +146,6 @@
                             <div class="comments">
                                 {{this.comments.length}}
                             </div>
-
-                            <div id="options-btn">
-                            </div>
-
-                            <script>
-                                isPostedbyCurrUser('{{this.username}}');
-                            </script>
                         </div>
                     </div>
                     {{/each}}

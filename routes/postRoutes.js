@@ -273,10 +273,10 @@ router.post('/submitreply', async function (req, res) {
           await currUser.save();
           res.redirect('/post/view/' + encodeURIComponent(postId))
         } else {
-          return res.status(403).send('Unauthorized')
+          res.redirect('/post/view/' + encodeURIComponent(postId));
         }
       } else {
-        return res.status(404).send('Comment not found')
+        res.redirect('/post/view/' + encodeURIComponent(postId))
       }
     } catch (err) {
       console.error(err)

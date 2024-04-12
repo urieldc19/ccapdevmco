@@ -34,7 +34,7 @@
     <body>
         <div class="container">
             <h1><span style="color: #ec3232">Change</span><span style="color: #2992cf"> Password</span></h1>
-            <form id="passwordForm" action="/editPass" method="POST">
+            <form id="passwordForm" action="/editPass" method="POST" enctype="multipart/form-data">
             {{>messages}}
               <label for="currentPassword">Current Password:</label><br>
               <input type="password" id="currentPassword" name="currentPassword" required><br><br>

@@ -22,7 +22,7 @@ const path = require('path') // our path directory
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const flash = require('connect-flash')
-//const MongoStore = new require('connect-mongo')(session);
+const bcrypt = require('bcrypt');
 
 app.use(express.json()) // use json
 app.use(express.urlencoded( {extended: false} )); // files consist of more than strings
@@ -62,6 +62,7 @@ app.use('/', authRouter);
 // LINKS
 app.get('/', async function (req, res) {
   let postnum = await User.find({}).count();
+  const saltRounds = 10;
 
   if (!req.session.username) {
     req.session.username = ""
@@ -69,10 +70,11 @@ app.get('/', async function (req, res) {
 
   if (postnum < 1)
   {
+      const hash = await bcrypt.hash("aaa", saltRounds);
       const user1 = {
       username: "thedogist",
       email: "thedogist@mail.com",
-      password: "aaa",
+      password: hash,
       bio: "I love dogs!",
       profilepic: "/images/fileuploads/profile.jpg",
       headerpic: "/images/fileuploads/user-cover-pic.png",
@@ -82,10 +84,11 @@ app.get('/', async function (req, res) {
 
     await User.create(user1);
 
+    const hash2 = await bcrypt.hash("bbb", saltRounds);
     const user2 = {
       username: "thehobbyist",
       email: "thehobbyist@mail.com",
-      password: "bbb",
+      password: hash2,
       bio: "My hobby is playing games",
       profilepic: "/images/fileuploads/user1.jpg",
       headerpic: "/images/fileuploads/skull.jpg",
@@ -95,10 +98,11 @@ app.get('/', async function (req, res) {
 
     await User.create(user2);
 
+    const hash3 = await bcrypt.hash("ccc", saltRounds);
     const user3 = {
       username: "facethemusic",
       email: "facethemusic@mail.com",
-      password: "ccc",
+      password: hash3,
       bio: "Music rocks!",
       profilepic: "/images/fileuploads/user2.jpg",
       headerpic: "/images/fileuploads/music.jpg",
@@ -108,10 +112,11 @@ app.get('/', async function (req, res) {
 
     await User.create(user3);
 
+    const hash4 = await bcrypt.hash("ddd", saltRounds);
     const user4 = {
       username: "foodie",
       email: "foodie@mail.com",
-      password: "ddd",
+      password: hash4,
       bio: "FOOD is LIFE!",
       profilepic: "/images/fileuploads/user3.png",
       headerpic: "/images/fileuploads/food.png",
@@ -121,10 +126,11 @@ app.get('/', async function (req, res) {
     
     await User.create(user4);
 
+    const hash5 = await bcrypt.hash("sss", saltRounds);
     const user5 = {
       username: "girlboss",
       email: "slayable@mail.com",
-      password: "sss",
+      password: hash5,
       bio: "On fire and feeling fine",
       profilepic: "/images/fileuploads/user4.jpg",
       headerpic: "/images/fileuploads/kiss.jpg",
@@ -250,7 +256,7 @@ app.get('/search', async(req,res) => {
     
   if(req.query.search != '') {
     let currUser = await User.findOne({username: req.session.username});
-    const posts = await Post.find({$or:[{title: {$regex : req.query.search}}, {description: {$regex : req.query.search}}]}).sort({ postdate: -1 });
+    const posts = await Post.find({$or:[{title: {$regex : req.query.search, $options: 'i'}}, {description: {$regex : req.query.search, $options: 'i'}}]}).sort({ postdate: -1 });
     const popularPosts = await Post.find({}).sort({upvote: -1}).limit(3);
 
     if (currUser) {
@@ -336,3 +342,7 @@ function getFullDate(month, day, year, hour, minutes) {
 app.listen(envPort, () => {
   console.log(`Server started on port ${envPort}`);
 });
+
+hbs.registerHelper('ifEquals', function(arg1, arg2, options) {
+  return (arg1 == arg2) ? options.fn(this) : options.inverse(this)
+})

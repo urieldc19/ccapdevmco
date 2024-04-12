@@ -1,147 +1,152 @@
 <html>
 
-    <head>
-        <title>Profile</title>
-        <link rel="stylesheet" type="text/css" href="/css/forum-viewuserposts.css"/>
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-        <script>
-            function login() {
-                window.location.href = "/login";
-            }
-       
-            function view() {
-                window.location.href = "/profile";
-            }
+<head>
+    <title>Profile</title>
+    <link rel="stylesheet" type="text/css" href="/css/forum-viewuserposts.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script>
+        function login() {
+            window.location.href = "/login";
+        }
 
-            function editProfile() {
-                window.location.href = "/editprofile";
-            }
+        function view() {
+            window.location.href = "/profile";
+        }
 
-            function securitySettings() {
-                window.location.href = "/security-settings";
-            }
+        function editProfile() {
+            window.location.href = "/editprofile";
+        }
 
-            function newPost() {
-                window.location.href = "/post/create";
-            }
-        </script>
+        function securitySettings() {
+            window.location.href = "/security-settings";
+        }
 
-        <script src="/scripts/forum.js" defer></script>
-    
-    </head>
+        function newPost() {
+            window.location.href = "/post/create";
+        }
+    </script>
 
-     <header id="mainheader" action="/search" method="post">
-        <a href="/" class="logo"></a>
-        <form id="searcharea">
-            <input type="text" name="search" id="search" placeholder="Search HotOrCold">
-            <button type="submit" class='btn' id="searchbtn"></button>  
-        </form>
-        
-            <style>
-                #viewbtn {
-                background-image: url({{currUser.profilepic}});
-                }
-            </style>
+    <script src="/scripts/forum.js" defer></script>
 
-            <script>
-                window.onload = () => {
-                    isLoggedIn("{{currUser.username}}");
-                }
-            </script>
-    </header>
+</head>
 
-    <body>
-            <style>
-                .profilepic {
-                    background-image: url({{visitedUser.profilepic}});
-                }
-                .coverphoto {
-                    background-image: url({{visitedUser.headerpic}});
-                }
-            </style>
+<header id="mainheader" action="/search" method="post">
+    <a href="/" class="logo"></a>
+    <form id="searcharea">
+        <input type="text" name="search" id="search" placeholder="Search HotOrCold">
+        <button type="submit" class='btn' id="searchbtn"></button>
+    </form>
 
-            <div class="container">
-                <div class="coverphoto">
-                    <div class="profilepic"></div>
+    <style>
+        #viewbtn {
+            background-image: url("{{currUser.profilepic}}");
+        }
+    </style>
+
+    <script>
+        window.onload = () => {
+            isLoggedIn("{{currUser.username}}");
+        }
+    </script>
+</header>
+
+<body>
+    <style>
+        .profilepic {
+            background-image: url("{{visitedUser.profilepic}}");
+        }
+
+        .coverphoto {
+            background-image: url("{{visitedUser.headerpic}}");
+        }
+    </style>
+
+    <div class="container">
+        <div class="coverphoto">
+            <div class="profilepic"></div>
+        </div>
+
+        <div class="bar" id="bar">
+            <div id="username">{{visitedUser.username}}</div>
+
+            <div class="actions">
+                {{#ifEquals currUser.username visitedUser.username}}
+                    <button class="actionbtn" id="createbtn" onclick="newPost()">Create Post</button>
+                {{/ifEquals}}
+                    <button class="actionbtn" id="postbtn" onclick="window.location.href = '/user/{{visitedUser.username}}'">Posts</button>
+                    <button class="actionbtn" id="commentbtn" onclick="window.location.href = '/user/{{visitedUser.username}}/commentedposts'">Comments</button>
+                    <button class="actionbtn" id="upvotebtn" onclick="window.location.href = '/user/{{visitedUser.username}}/upvotedposts'">Upvotes</button>
+                    <button class="actionbtn" id="downvotebtn" onclick="window.location.href = '/user/{{visitedUser.username}}/downvotedposts'">Downvotes</button>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="leftpanel">
+                <div class="profdesc">
+                    <h1>Bio</h1>
+                    <div class="bio">
+                        <p>{{visitedUser.bio}}</p>
+                    </div>
                 </div>
 
-                <div class="bar" id="bar">
-                    <div id="username">{{visitedUser.username}}</div>
+                {{#ifEquals currUser.username visitedUser.username}}
+                    <button class="btn1" id="editDetails" onclick="editProfile()">Edit Profile</button>
+                    <button class="btn1" id="securitySettings" onclick="securitySettings()">Security Settings</button>
+                {{/ifEquals}}
+            </div>
 
-                    <div class="actions">
-                        <button class="actionbtn" id="createbtn" onclick="newPost()">Create Post</button>
-                        <button class="actionbtn" id="postbtn" onclick="window.location.href = '/user/{{visitedUser.username}}'">Posts</button>
-                        <button class="actionbtn" id="commentbtn" onclick="window.location.href = '/user/{{visitedUser.username}}/commentedposts'">Comments</button>
-                        <button class="actionbtn" id="upvotebtn" onclick="window.location.href = '/user/{{visitedUser.username}}/upvotedposts'">Upvotes</button>
-                        <button class="actionbtn" id="downvotebtn" onclick="window.location.href = '/user/{{visitedUser.username}}/downvotedposts'">Downvotes</button>                    
-                    </div>
+            <div class="rightpanel">
+                
+                {{#each posts}}
+                    <style>
+                        .postinfoicon {
+                            background-image: url("{{this.userprofilepic}}");
+                        }
+                    </style>
 
-                </div>
+                    <script>
+                        function viewPost(postId) {
+                            window.location.href = '/post/view/' + encodeURIComponent(postId)
+                        }
 
-                <div class="panel">
-                    <div class="leftpanel">
-                        <div class="profdesc">
-                            <h1>Bio</h1>
-                            <div class="bio">
-                                <p>{{visitedUser.bio}}</p>
-                            </div>
-                        </div>   
-                        
-                        <button class="btn1" id="editDetails" onclick="editProfile()">Edit Profile</button>
-                        <button class="btn1" id="securitySettings" onclick="securitySettings()">Security Settings</button>
-                    </div>
+                        function upvotePost(postId) {
+                            window.location.href = '/upvote/' + encodeURIComponent(postId)
+                        }
 
-                    <div class="rightpanel">
-                    {{#each posts}}
-                            <style>
-                                .postinfoicon {
-                                    background-image: url({{this.userprofilepic}});
-                                }
-                            </style>
+                        function downvotePost(postId) {
+                            window.location.href = '/downvote/' + encodeURIComponent(postId)
+                        }
 
-                            <script>
-                                function viewPost(postId) {
-                                    window.location.href = '/post/view/' + encodeURIComponent(postId)
-                                }
+                        function editPost(postId) {
+                            window.location.href = '/edit/' + encodeURIComponent(postId)
+                        }
 
-                                function upvotePost(postId) {
-                                    window.location.href = '/upvote/' + encodeURIComponent(postId)
-                                }
+                        function deletePost(postId) {
+                            window.location.href = '/deletepost/' + encodeURIComponent(postId)
+                        }
+                    </script>
 
-                                function downvotePost(postId) {
-                                    window.location.href = '/downvote/' + encodeURIComponent(postId)
-                                }
-                                
-                                function editPost(postId) {
-                                    window.location.href = '/edit/' + encodeURIComponent(postId)
-                                }
-
-                                function deletePost(postId) {
-                                    window.location.href = '/deletepost/' + encodeURIComponent(postId)
-                                }
-                            </script>
-
-                            <div class="postarea" name="{{this.url}}">
-                                <div class="post" onclick="viewPost('{{this._id}}')">
-                                    <div class="postheader">
-                                        <img class="postinfoicon" src="{{this.userprofilepic}}"/>
-                                        <div class="postinfo">
-                                            <div class="postinforow1">
-                                                <span class="title">{{this.title}}</span>
-                                                <span class="posttag"><a href="/tag/{{this.tag}}">{{this.tag}}</a></span>
-                                            </div>
-                                            <div class="postinforow2">
-                                                <span><a class="username-link" href="/user/{{this.username}}">{{this.username}}</a></span> • 
-                                                <span>{{this.postdate}}</span>
-                                                {{#if this.edited}}
-                                                    <span> • Edited</span>
-                                                {{/if}}
-                                            </div>
-                                        </div>
+                    <div class="postarea" name="{{this.url}}">
+                        <div class="post" onclick="viewPost('{{this._id}}')">
+                            <div class="postheader">
+                                <img class="postinfoicon" src="{{this.userprofilepic}}" />
+                                <div class="postinfo">
+                                    <div class="postinforow1">
+                                        <span class="title">{{this.title}}</span>
+                                        <span class="posttag"><a href="/tag/{{this.tag}}">{{this.tag}}</a></span>
+                                    </div>
+                                    <div class="postinforow2">
+                                        <span><a class="username-link" href="/user/{{this.username}}">{{this.username}}</a></span> •
+                                        <span>{{this.postdate}}</span>
+                                        {{#if this.edited}}
+                                        <span> • Edited</span>
+                                        {{/if}}
+                                    </div>
                                 </div>
+                            </div>
 
                             <div id="postcont{{@index}}" class="postcontent">
                                 <div class="postdesc">
@@ -150,13 +155,13 @@
 
                                 <script>
                                     {{#if this.image}}
-                                        document.getElementById("postcont{{@index}}").innerHTML +=
-                                            `<img class="postimage" src="{{this.image}}">`
+                                    document.getElementById("postcont{{@index}}").innerHTML +=
+                                    `<img class="postimage" src="{{this.image}}">`
                                     {{/if}}
                                 </script>
                             </div>
                         </div>
-                        
+
                         <div class="postactions">
                             <input type="button" class="hot" onclick="upvotePost('{{this._id}}')">
                             <div class="votes">
@@ -167,12 +172,13 @@
                             <div class="votes">
                                 {{this.downvote}}
                             </div>
-                            
+
                             <input type="button" class="commentbtn" onclick="viewPost('{{this._id}}')">
                             <div class="comments">
                                 {{this.comments.length}}
-                                </div>  
-                            
+                            </div>
+
+                            {{#ifEquals currUser.username this.username}}
                                 <div class="options-btn">
                                     <button class="options-btn-trigger">ooo</button>
                                     <div class="options-menu">
@@ -180,14 +186,15 @@
                                         <button class="delete-btn" onclick="deletePost('{{this._id}}')">Delete</button>
                                     </div>
                                 </div>
+                            {{/ifEquals}}
                         </div>
-                        </div>
-                    {{/each}}
-                    </div>      
-                </div>
+                    </div>
+                {{/each}}
             </div>
+        </div>
+    </div>
 
-        <script src="/scripts/forum.js" defer></script>
-    </body>
+    <script src="/scripts/forum.js" defer></script>
+</body>
 
 </html>

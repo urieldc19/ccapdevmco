@@ -135,8 +135,8 @@
                                     <div class="postinforow2">
                                         <span id="username" onclick="visitUser('{{posts.username}}')">{{posts.username}}</span> •
                                         <span class="date">{{posts.postdate}}</span>
-                                        {{#if this.edited}}
-                                                    <span> • Edited</span>
+                                        {{#if posts.edited}}
+                                            <span> • Edited</span>
                                         {{/if}}
                                     </div>
                                 </div>
@@ -170,13 +170,15 @@
                                 {{posts.comments.length}}
                             </div>
 
-                            <div class="options-btn">
-                                <button class="options-btn-trigger" onclick="toggleOptions()">ooo</button>
-                                <div class="options-menu">
-                                    <button id="edit-btn" onclick="editPost('{{posts._id}}')">Edit</button>
-                                    <button class="delete-btn" onclick="deletePost('{{posts._id}}')">Delete</button>
+                            {{#ifEquals currUser.username posts.username}}
+                                <div class="options-btn">
+                                    <button class="options-btn-trigger" onclick="toggleOptions()">ooo</button>
+                                    <div class="options-menu">
+                                        <button id="edit-btn" onclick="editPost('{{posts._id}}')">Edit</button>
+                                        <button class="delete-btn" onclick="deletePost('{{posts._id}}')">Delete</button>
+                                    </div>
                                 </div>
-                            </div>
+                            {{/ifEquals}}
                         </div>
 
                         <div class="commentsection">
@@ -195,18 +197,22 @@
                             {{#each posts.comments}}
                                 <div class="commentarea">
                                     <div class="comment">
-                                        <div class="commenterinfo">
+                                        <div class="commenterinfo" id="commenterinfo">
                                             <image class="commentericon" src="{{this.commenterprofilepic}}"/>
+
                                             <div class="commentername">
                                                 <a class="userlink" href="/user/{{this.commenterusername}}">{{this.commenterusername}}</a> • <span class="date2">{{this.commentdate}}</span>
                                             </div>
-                                            <div class="options-btn">
-                                                <button class="options-btn-trigger" onclick="toggleOptions()">ooo</button>
-                                                <div class="options-menu">
-                                                    <button id="edit-btn" onclick="editCommentText('{{this.postId}}','{{this._id}}','{{this.commenterId}}')">Edit</button>
-                                                    <button class="delete-btn" onclick="deleteComment('{{this.postId}}','{{this._id}}')">Delete</button>
+                                            
+                                            {{#ifEquals ../currUser.username this.commenterusername}}
+                                                <div class="options-btn">
+                                                    <button class="options-btn-trigger" onclick="toggleOptions()">ooo</button>
+                                                    <div class="options-menu">
+                                                        <button id="edit-btn" onclick="editCommentText('{{this.postId}}','{{this._id}}','{{this.commenterId}}')">Edit</button>
+                                                        <button class="delete-btn" onclick="deleteComment('{{this.postId}}','{{this._id}}')">Delete</button>
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            {{/ifEquals}}
                                         </div>
 
                                         <div class="commenttext">
@@ -229,8 +235,9 @@
                                         <div class="replysection">
                                             <div class="respondentinfo">
                                                 <image class="respondenticon" src="{{this.respondentprofilepic}}"/>
+                                                
                                                 <div class="respondentname">
-                                                    {{this.respondent}} • <span class="date2">{{this.responsedate}}</span>
+                                                    {{this.respondentusername}} • <span class="date2">{{this.responsedate}}</span>
                                                 </div>
                                             </div>
 
