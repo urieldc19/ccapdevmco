@@ -293,7 +293,7 @@ router.post('/editcomment', async function (req, res) {
   const currUser = await User.findOne({username: req.session.username});
   console.log("User Info: " + currUser)
   const post = await Post.findById(req.body.postId);
-  const postId = req.query.postId;
+  const postId = req.body.postId;
   console.log("Post Info: " + post)
   const commentId = req.body.commentId
   console.log("Comment Id: " + commentId)
@@ -305,8 +305,10 @@ router.post('/editcomment', async function (req, res) {
         if (commentToEdit) {
           if ((currUser._id).equals(commentToEdit.commenterId)) {
             commentToEdit.commenttext = req.body.edithere
-            commentToEdited = true;
+            commentToEdit.isEdited = true;
             await post.save()
+
+            res.redirect('/post/view/' + encodeURIComponent(postId))
           } else {
             res.redirect('/post/view/' + encodeURIComponent(postId))
           }
@@ -320,7 +322,6 @@ router.post('/editcomment', async function (req, res) {
 });
 
 // DELETE COMMENT
-
 router.get('/deletecomment/', async function (req, res) {
   const currUser = await User.findOne({username: req.session.username})
   const post = await Post.findById(req.query.postId)
@@ -374,7 +375,8 @@ router.get('/upvote/:id', async (req, res) => {
             await Post.updateOne({ _id: postId }, { $inc: { upvote: 1 } });
               currUser.upvotedposts.push(postId); 
           }
-          await currUser.save();          
+          await currUser.save();
+          res.redirect('/post/view/' + encodeURIComponent(postId))       
         } else {
           res.redirect('/post/view/' + encodeURIComponent(postId))
         }
@@ -412,7 +414,8 @@ router.get('/downvote/:id', async(req,res) => {
             await Post.updateOne({ _id: postId }, { $inc: { downvote: 1 } });
             currUser.downvotedposts.push(postId); 
           }
-          await currUser.save();          
+          await currUser.save();  
+          res.redirect('/post/view/' + encodeURIComponent(postId))          
         } else {
           res.redirect('/post/view/' + encodeURIComponent(postId))
         }
