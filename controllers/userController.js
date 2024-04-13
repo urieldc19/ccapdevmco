@@ -22,27 +22,32 @@ exports.registerUser = async (req, res) => {
             } 
             else 
             {
-                const saltRounds = 10;
-                const hash = await bcrypt.hash(password, saltRounds);
+                if (req.body.password === req.body.confirmpassword) {
+                    const saltRounds = 10;
+                    const hash = await bcrypt.hash(password, saltRounds);
 
-                    const newUser = 
-                    {
-                        username: username,
-                        email: email,
-                        password: hash,
-                        bio: "",
-                        profilepic: "/images/fileuploads/user-prof-pic.png",
-                        headerpic: "/images/fileuploads/user-cover-pic.png",
-                        upvotedposts: [],
-                        downvotedposts: []
-                    };
+                        const newUser = 
+                        {
+                            username: username,
+                            email: email,
+                            password: hash,
+                            bio: "",
+                            profilepic: "/images/fileuploads/user-prof-pic.png",
+                            headerpic: "/images/fileuploads/user-cover-pic.png",
+                            upvotedposts: [],
+                            downvotedposts: []
+                        };
 
-                    await User.create(newUser);
+                        await User.create(newUser);
 
-                    req.session.username = username;
-                    sessionuser = username;
+                        req.session.username = username;
+                        sessionuser = username;
 
-                    res.redirect('/');
+                        res.redirect('/');                    
+                } else {
+                    req.flash('error_msg', 'Passwords do not match. Please try again.');
+                    res.redirect('/register');  
+                }
             }
         } catch {
     
