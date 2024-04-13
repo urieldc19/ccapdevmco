@@ -1,4 +1,5 @@
 .error-message {
+    font-size: 10px;
     background-color: #863a41;
     color: white;
     border: 1px solid #690404;
@@ -11,6 +12,7 @@
 }
 
 .success-message {
+    font-size: 10px;
     background-color: #062753;
     color: white;
     border: 1px solid #062753;

@@ -43,7 +43,6 @@ exports.registerUser = async (req, res) => {
                     sessionuser = username;
 
                     res.redirect('/');
-                
             }
         } catch {
     
@@ -66,7 +65,8 @@ exports.loginUser = async (req, res) => {
                     bcrypt.compare(req.body.password, currUser.password, function(err, results){
                         
                         if(err){
-                            res.redirect('/');
+                            req.flash('error_msg', 'An error happened. Please try again.');
+                            res.redirect('/login');
                         }
 
                         if (results) {
@@ -112,41 +112,31 @@ exports.changePassword = async (req, res) => {
         try {
             const currUser = await User.findOne({username: req.session.username});
             
-            if (currUser) {
+            if (currUser) 
+            {
+                if (newPassword === confirmPassword) {
 
-                bcrypt.compare(currentPassword, currUser.password, async function(err, results){
+                    bcrypt.compare(currentPassword, currUser.password, async function(err, results){
 
-                    if (results) {
-                        
-                        if (newPassword === confirmPassword) {
+                        if (results) {
 
-                            bcrypt.compare(newPassword, currUser.password, async function(err, results2){
+                            const saltRounds = 10;
+                            const hash2 = await bcrypt.hash(newPassword, saltRounds);
         
-                                if (results2) {
-                                    
-                                    const saltRounds = 10;
-                                    const hash2 = await bcrypt.hash(newPassword, saltRounds);
-
-                                    await User.updateOne({ username: currUser.username }, { $set: {password: hash2}});
-                                    await currUser.save();
-                                    
-                                    res.redirect('/user/'+ currUser.username);
-                                } else {
-                                    req.flash('error_msg', 'Password is the same as previous. Please try again.');
-                                    res.redirect('/login');
-                                }
-                            })
-
+                            await User.updateOne({ username: currUser.username }, { $set: {password: hash2}});
+                            await currUser.save();
+                                            
+                            res.redirect('/user/'+ currUser.username);
+                                
                         } else {
-                            req.flash('error_msg', 'New password and confirm password do not match! Please try again.');
+                            req.flash('error_msg', 'Current password is incorrect. Please try again.');
                             res.redirect('/editPass');
                         }
-
-                    } else {
-                        req.flash('error_msg', 'Current password is incorrect. Please try again.');
-                        res.redirect('/editPass');
-                    }
-                })
+                    })
+                } else {
+                    req.flash('error_msg', 'New password and confirm password do not match! Please try again.');
+                    res.redirect('/editPass');
+                }
             } else {
                 req.flash('error_msg', 'User not found!');
                 res.redirect('/editPass');
@@ -182,8 +172,12 @@ exports.editProfile = async (req, res) => {
                         console.log("Error uploading profile picture:", error);
                         // Handle error
                     } else {
-                        await User.updateOne({ username: currUser.username }, { $set: {profilepic: '/images/fileuploads/' + req.files.profilepic.name}});
-                        await Post.updateMany({ username: currUser.username }, { $set: {userprofilepic: '/images/fileuploads/' + req.files.profilepic.name}});
+                        // Update profile picture path in the database
+                        await User.updateOne({ username: currUser.username }, { $set: { profilepic: '/images/fileuploads/' + req.files.profilepic.name }});
+                        // Update profile picture path in related posts
+                        await Post.updateMany({ username: currUser.username }, { $set: { userprofilepic: '/images/fileuploads/' + req.files.profilepic.name }});
+                        await Post.updateMany({ "comments.commenterusername": currUser.username }, { $set: { "comments.$[elem].commenterprofilepic": '/images/fileuploads/' + req.files.profilepic.name }}, { arrayFilters: [{ "elem.commenterusername": currUser.username }] })
+                        await Post.updateMany({ "comments.replies.respondentusername": currUser.username }, { $set: { "comments.$[].replies.$[elem].respondentprofilepic": '/images/fileuploads/' + req.files.profilepic.name }}, { arrayFilters: [{ "elem.respondentusername": currUser.username }] })
                     }
                 });
             }
@@ -195,7 +189,7 @@ exports.editProfile = async (req, res) => {
                         // Handle error
                     } else {
                         // Update header picture path in the database
-                        await User.updateOne({ username: currUser.username }, { $set: {headerpic: '/images/fileuploads/' + req.files.headerpic.name}});
+                        await User.updateOne({ username: currUser.username }, { $set: { headerpic: '/images/fileuploads/' + req.files.headerpic.name }});
                     }
                 });
             }

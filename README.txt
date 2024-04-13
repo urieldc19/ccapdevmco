@@ -1,2 +1,0 @@
-For this phase, the web app assumes that the user has signed in by default which changes the header.
-To change the header into its signed out state, please change the value of this.loggedin variable found at script.js to false. 

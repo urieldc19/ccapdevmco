@@ -46,7 +46,7 @@
                         <div class="form-group-header">
                             <label>Already have an account?</label>
                         </div>
-                        {{> messages}}
+                    
                         <div class="form-group">
                             <label for="username">Username:</label>
                             <input type="text" id="username" name="username" autocomplete="username" required>
@@ -58,6 +58,8 @@
                         <div class="form-group">
                             <input type="submit" value="Log In">
                         </div>
+
+                        {{> messages}}
 
                         <div class="form-group-register">
                             <label>Don't have an account? <a href="/register">Sign Up</a></label>
