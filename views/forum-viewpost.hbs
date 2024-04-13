@@ -202,6 +202,9 @@
 
                                             <div class="commentername">
                                                 <a class="userlink" href="/user/{{this.commenterusername}}">{{this.commenterusername}}</a> • <span class="date2">{{this.commentdate}}</span>
+                                                {{#if this.isEdited}}
+                                                    • <span class="date2">Edited</span>
+                                                {{/if}}
                                             </div>
                                             
                                             {{#ifEquals ../currUser.username this.commenterusername}}

@@ -120,30 +120,47 @@ exports.changePassword = async (req, res) => {
 
                         if (results) {
 
-                            const saltRounds = 10;
-                            const hash2 = await bcrypt.hash(newPassword, saltRounds);
-        
-                            await User.updateOne({ username: currUser.username }, { $set: {password: hash2}});
-                            await currUser.save();
-                                            
-                            res.redirect('/user/'+ currUser.username);
-                                
+                            const result2 = await bcrypt.compare(newPassword, currUser.password)
+
+                            console.log(currUser.password, newPassword, result2)
+
+                            if (result2 === false) {
+                                const saltRounds = 10;
+                                const hash2 = await bcrypt.hash(newPassword, saltRounds);
+            
+                                await User.updateOne({ username: currUser.username }, { $set: {password: hash2}});
+                                await currUser.save();
+                                                
+                                res.redirect('/user/'+ currUser.username);
+                            } else {
+                                req.session.username = currUser.username;
+                                req.flash('error_msg', 'New password is the same as previous. Please try again.');
+                                res.redirect('/editPass');
+                            }
+
                         } else {
+                            req.session.username = currUser.username;
+                            console.log(req.session)
                             req.flash('error_msg', 'Current password is incorrect. Please try again.');
                             res.redirect('/editPass');
                         }
                     })
                 } else {
+                    req.session.username = currUser.username;
+                    console.log(req.session)
                     req.flash('error_msg', 'New password and confirm password do not match! Please try again.');
                     res.redirect('/editPass');
                 }
             } else {
+                req.session.username = currUser.username;
+                console.log(req.session)
                 req.flash('error_msg', 'User not found!');
                 res.redirect('/editPass');
             }
         } catch (err) {
             console.error(err);
             req.flash('error_msg', 'Something went wrong!');
+            req.session.username = currUser.username;
             res.redirect('/editPass');
         }
     } else {
@@ -193,25 +210,42 @@ exports.editProfile = async (req, res) => {
                     }
                 });
             }
+
             if (email) {
-                currUser.email = email;
+
+                const userEmail = await User.findOne({email: email});
+
+                if (!userEmail)
+                {
+                    currUser.email = email;
+                } else {
+                    console.log(userEmail.username)
+                    req.flash('error_msg', 'Email is the same as previous. Please try again.');
+                    return res.redirect('/editprofile')
+                }
             }
+
             if (bio) {
-                currUser.bio = bio;
+                if (currUser.bio === bio) {
+                    req.flash('error_msg', 'Bio is the same as previous. Please try again.');
+                    return res.redirect('/editprofile')
+                } else {
+                    currUser.bio = bio;
+                }
             }
 
             // Save the updated user profile
             await currUser.save();
 
             // Redirect to the appropriate page
-            res.redirect('/profile');
+            return res.redirect('/profile');
         } else {
             req.flash('error_msg', 'User not found!');
-            res.redirect('/submiteditprofile');
+            res.redirect('/editprofile');
         }
     }catch (err) {
             console.error(err);
             req.flash('error_msg', 'Something went wrong!');
-            res.redirect('/submiteditprofile');
+            res.redirect('/editprofile');
         }
   }

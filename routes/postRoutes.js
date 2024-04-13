@@ -305,6 +305,7 @@ router.post('/editcomment', async function (req, res) {
         if (commentToEdit) {
           if ((currUser._id).equals(commentToEdit.commenterId)) {
             commentToEdit.commenttext = req.body.edithere
+            commentToEdited = true;
             await post.save()
           } else {
             res.redirect('/post/view/' + encodeURIComponent(postId))

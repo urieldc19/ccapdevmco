@@ -27,6 +27,8 @@
         function newPost() {
             window.location.href = "/post/create";
         }
+
+
     </script>
 
     <script src="/scripts/forum.js" defer></script>
@@ -113,19 +115,19 @@
                         }
 
                         function upvotePost(postId) {
-                            window.location.href = '/upvote/' + encodeURIComponent(postId)
+                            window.location.href = '/post/upvote/' + encodeURIComponent(postId)
                         }
 
                         function downvotePost(postId) {
-                            window.location.href = '/downvote/' + encodeURIComponent(postId)
+                            window.location.href = '/post/downvote/' + encodeURIComponent(postId)
                         }
 
                         function editPost(postId) {
-                            window.location.href = '/edit/' + encodeURIComponent(postId)
+                            window.location.href = '/post/edit/' + encodeURIComponent(postId)
                         }
 
                         function deletePost(postId) {
-                            window.location.href = '/deletepost/' + encodeURIComponent(postId)
+                            window.location.href = '/post/delete/' + encodeURIComponent(postId)
                         }
                     </script>
 
@@ -178,7 +180,7 @@
                                 {{this.comments.length}}
                             </div>
 
-                            {{#ifEquals currUser.username this.username}}
+                            {{#ifEquals ../currUser.username this.username}}
                                 <div class="options-btn">
                                     <button class="options-btn-trigger">ooo</button>
                                     <div class="options-menu">

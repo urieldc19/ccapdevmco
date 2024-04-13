@@ -32,7 +32,7 @@ header {
   top: 0;
   height: 40px;
   display: flex;
-  flex-direction: row;
+flex-direction: row;
   padding: 15px 0px;
   align-content: space-between;
   border-bottom: #062753 solid 0.2px;
@@ -48,7 +48,6 @@ header {
 }
 
 #searcharea {
-  height: auto;
   display: flex;
   flex-direction: row;
   align-self: center;
@@ -104,8 +103,6 @@ header {
   height: 45px;
   border-radius: 100px;
   border: none;
-  margin-top: auto;
-  margin-bottom: auto;
 }
 
 #searchbtn:hover {
@@ -182,25 +179,26 @@ header {
   margin-left: 7px;
 }
 
+/* BODY */
+
 h1 {
     font-size: 30px;
     color: white;
     position: center;
     text-align: center;
 }
+
 .container {
     width: 800px;
     height: 500px;
-    margin: 0 auto;
+    margin: 50px auto;
     padding: 50px;
     background-color: #062753;
     border: 1px solid #ccc;
     border-radius: 30px;
-    margin-top: 20px;
     align-items: center;
     text-align: center;
   }
-  
   
   button {
     margin-top: -20px;
