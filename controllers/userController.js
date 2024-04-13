@@ -47,9 +47,7 @@ exports.registerUser = async (req, res) => {
         } catch {
     
         }
-    } else {
-        res.redirect('/register');
-    {
+    }
 };
 
 exports.loginUser = async (req, res) => {
