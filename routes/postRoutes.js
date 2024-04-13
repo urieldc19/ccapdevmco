@@ -336,6 +336,7 @@ router.get('/deletecomment/', async function (req, res) {
         if ((currUser._id).equals(commentToDelete.commenterId)) {
           await Post.updateOne({_id: post._id}, {$pull: {comments: {_id: commentToDelete._id}}})
           await post.save()
+          res.redirect('/post/view/' + encodeURIComponent(postId))
         } else {
           res.redirect('/post/view/' + encodeURIComponent(postId))
         } 
