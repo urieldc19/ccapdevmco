@@ -48,7 +48,6 @@ exports.registerUser = async (req, res) => {
     
         }
     } else {
-        req.flash('error_msg', 'Passwords must match. Please try again.');
         res.redirect('/register');
     {
 };
